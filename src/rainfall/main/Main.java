@@ -1,10 +1,10 @@
-package rainfall;
+package rainfall.main;
 
 /**
  * Parses the arguments that were read from the command line and passes them to
  * the launcher.
  */
-public class Main {
+final class Main {
   /**
    * Entry point of the compiler.
    *
