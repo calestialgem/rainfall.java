@@ -8,9 +8,9 @@ import java.util.*;
  */
 public final class Launcher {
   /**
-   * Map from options to values for the command.
+   * Map from options to optional values for the command.
    */
-  public final Map<Option, String> options;
+  public final Map<Option, Optional<String>> options;
 
   /**
    * Command to be launched.
@@ -25,13 +25,13 @@ public final class Launcher {
   /**
    * Constructs a launcher.
    *
-   * @param options   Map from the options to values for the command launched by
-   *                  the constructed launcher.
+   * @param options   Map from the options to optional values for the command
+   *                  launched by the constructed launcher.
    * @param command   Command to be launched by the constructed launcher.
    * @param arguments Arguments given for the command launched by the
    *                  constructed launcher.
    */
-  public Launcher(Map<Option, String> options, Command command,
+  public Launcher(Map<Option, Optional<String>> options, Command command,
     List<String> arguments) {
     this.options   = options;
     this.command   = command;
