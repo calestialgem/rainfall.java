@@ -9,24 +9,24 @@ import rainfall.launcher.*;
  */
 final class Arguments {
   /**
-   * Seen options.
+   * Given options.
    */
   final Map<Class<? extends Option>, Option> options;
 
   /**
-   * Command if it was seen.
+   * Given command.
    */
-  final Optional<Command> executed;
+  final Command command;
 
   /**
    * Constructs an arguments.
    *
-   * @param options  Options seen in the constructed arguments.
-   * @param executed Command if it was seen in the constructed arguments.
+   * @param options  Options given in the constructed arguments.
+   * @param executed Command given in the constructed arguments.
    */
   Arguments(Map<Class<? extends Option>, Option> options,
-    Optional<Command> executed) {
-    this.options  = options;
-    this.executed = executed;
+    Command command) {
+    this.options = options;
+    this.command = command;
   }
 }

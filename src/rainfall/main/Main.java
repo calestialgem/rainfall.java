@@ -11,6 +11,10 @@ final class Main {
    * @param arguments command-line arguments
    */
   public static void main(String[] arguments) {
-    System.out.println("Hello, world!");
+    try {
+      var parsedArguments = Parser.parse(arguments);
+    } catch (ArgumentError error) {
+      System.err.println(error.getMessage());
+    }
   }
 }
