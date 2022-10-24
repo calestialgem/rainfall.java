@@ -17,7 +17,7 @@ final class Main {
    */
   public static void main(String[] arguments) {
     try {
-      var launcher = new Main(arguments).run();
+      var launcher = new Main(arguments).parse();
     } catch (ArgumentError error) {
       System.err.println(error.getMessage());
     }
@@ -42,15 +42,16 @@ final class Main {
    */
   private Main(String[] parsed) {
     this.parsed = parsed;
-    current     = 0;
   }
 
   /**
-   * Run the parser.
+   * Parses the command line arguments to a launcher.
    *
-   * @return Parsed arguments.
+   * @return Launcher with the parsed options and command.
    */
-  private Launcher run() {
+  private Launcher parse() {
+    // Initialize mutable state.
+    current = 0;
     return new Launcher(parseOptions(), parseCommand());
   }
 
