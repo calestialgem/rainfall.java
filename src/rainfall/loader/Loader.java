@@ -16,6 +16,11 @@ public final class Loader {
   public final Path loaded;
 
   /**
+   * Packages that are loaded.
+   */
+  private ArrayList<Package<Linear>> packages;
+
+  /**
    * Constructs a loader.
    *
    * @param loaded Path to the workspace directory that is loaded by the
@@ -31,7 +36,9 @@ public final class Loader {
    * @return Linearly modelled workspace.
    */
   public Workspace<Linear> load() {
-    var packages = new ArrayList<Package<Linear>>();
-    return null;
+    // Initialize mutable state.
+    packages = new ArrayList<>();
+
+    return new Workspace<>(loaded, packages);
   }
 }
