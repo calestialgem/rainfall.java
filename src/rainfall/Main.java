@@ -113,8 +113,7 @@ final class Main {
           """
           Could not recognize option shortcut `%s`!
           Use:
-           - directory (d): set workspace directory
-          """.formatted(shortcut));
+           - directory (d): set workspace directory""".formatted(shortcut));
       };
 
     }
@@ -128,8 +127,7 @@ final class Main {
           """
           Could not recognize option name `%s`!
           Use:
-           - directory (d): set workspace directory
-          """.formatted(name));
+           - directory (d): set workspace directory""".formatted(name));
       };
     }
 
@@ -199,8 +197,7 @@ final class Main {
          - check (c): check packages
          - test  (t): test packages
          - build (b): build executable
-         - run   (r): run executable
-        """);
+         - run   (r): run executable""");
     var command = consume();
 
     // Dispatch to command name or shortcut.
@@ -218,8 +215,7 @@ final class Main {
          - check (c): check packages
          - test  (t): test packages
          - build (b): build executable
-         - run   (r): run executable
-        """.formatted(command));
+         - run   (r): run executable""".formatted(command));
     };
 
     // Check whether all the arguments are consumed.
