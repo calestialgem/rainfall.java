@@ -1,5 +1,9 @@
 package rainfall.utility;
 
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+
 /**
  * Failed result.
  *
@@ -34,5 +38,20 @@ public final class Failure<T, E> extends Result<T, E> {
   @Override
   public E getError() {
     return error;
+  }
+
+  @Override
+  public <U> Result<U, E> map(Function<T, U> mapper) {
+    return Result.ofFailure(error);
+  }
+
+  @Override
+  public <U> Result<U, E> bind(Function<T, Result<U, E>> binder) {
+    return Result.ofFailure(error);
+  }
+
+  @Override
+  public Result<T, E> check(Predicate<T> predicate, Supplier<E> supplier) {
+    return this;
   }
 }
