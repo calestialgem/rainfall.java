@@ -1,5 +1,7 @@
 package rainfall.launcher;
 
+import rainfall.workspace.*;
+
 /**
  * Generates the C file of the given executable package if it and all its
  * dependencies are valid.
@@ -8,7 +10,7 @@ public final class Build extends Command {
   /**
    * Name of the executable package that will be built.
    */
-  public final String built;
+  public final Name built;
 
   /**
    * Constructs a build command.
@@ -16,7 +18,7 @@ public final class Build extends Command {
    * @param built Name of the executable package that will be built by the
    *              constructed build command.
    */
-  public Build(String built) {
+  public Build(Name built) {
     this.built = built;
   }
 }
