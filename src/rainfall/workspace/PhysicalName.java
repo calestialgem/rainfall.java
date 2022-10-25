@@ -4,7 +4,7 @@ package rainfall.workspace;
  * Represents the name of physical elements of a Thrice program, which are
  * packages, modules, and sources.
  */
-public class PhysicalName {
+public final class PhysicalName {
   /**
    * Convert the given value to a name.
    *
