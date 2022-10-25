@@ -9,7 +9,7 @@ public final class Source<Model> {
   /**
    * Name of the source.
    */
-  public final String name;
+  public final Name name;
 
   /**
    * Path to the source's file.
@@ -30,7 +30,7 @@ public final class Source<Model> {
    * @param path  Path to the constructed source's file.
    * @param model Model data of the constructed source.
    */
-  public Source(String name, Path path, Model model) {
+  public Source(Name name, Path path, Model model) {
     this.name  = name;
     this.path  = path;
     this.model = model;

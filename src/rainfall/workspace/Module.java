@@ -10,7 +10,7 @@ public final class Module<Model> {
   /**
    * Name of the module.
    */
-  public final String name;
+  public final Name name;
 
   /**
    * Portion of the contained sources that are directly under the module, which
@@ -33,7 +33,7 @@ public final class Module<Model> {
    * @param sources    Sources directly under the constructed module.
    * @param submodules Submodules directly under the constructed module.
    */
-  public Module(String name, List<Source<Model>> sources,
+  public Module(Name name, List<Source<Model>> sources,
     List<Module<Model>> submodules) {
     this.name       = name;
     this.sources    = sources;
