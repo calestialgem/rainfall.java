@@ -2,6 +2,9 @@ package rainfall.utility;
 
 /**
  * Succeeded result.
+ *
+ * @param <T> Type of the value that is the successful result.
+ * @param <E> Type of the error that led to the failed result.
  */
 public final class Success<T, E> extends Result<T, E> {
   /**
