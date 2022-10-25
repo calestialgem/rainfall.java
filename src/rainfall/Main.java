@@ -1,4 +1,4 @@
-package rainfall.main;
+package rainfall;
 
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;

@@ -5,7 +5,7 @@
       "type": "java",
       "name": "Launch Launcher",
       "request": "launch",
-      "mainClass": "rainfall/rainfall.main.Main",
+      "mainClass": "rainfall/rainfall.Main",
       "projectName": "rainfall.java_d749c69e",
       "cwd": "${workspaceFolder}",
       "args": ["--directory", "res", "new", "testpackage"]
