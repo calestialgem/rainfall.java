@@ -1,6 +1,6 @@
 package rainfall.workspace;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a Thrice module. Thrice sources are modeled with the given extra
@@ -17,14 +17,14 @@ public final class Module<Model> {
    * means the they are entires of the module's directory. Thus, does not
    * include the sources that are contained by the submodules of the module.
    */
-  public final List<Source<Model>> sources;
+  public final Map<PhysicalName, Source<Model>> sources;
 
   /**
    * Portion of the contained submodules that are directly under the module,
    * which means the they are entires of the module's directory. Thus, does not
    * include the submodules that are contained by the submodules of the module.
    */
-  public final List<Module<Model>> submodules;
+  public final Map<PhysicalName, Module<Model>> submodules;
 
   /**
    * Constructs a module.
@@ -33,8 +33,8 @@ public final class Module<Model> {
    * @param sources    Sources directly under the constructed module.
    * @param submodules Submodules directly under the constructed module.
    */
-  public Module(PhysicalName name, List<Source<Model>> sources,
-    List<Module<Model>> submodules) {
+  public Module(PhysicalName name, Map<PhysicalName, Source<Model>> sources,
+    Map<PhysicalName, Module<Model>> submodules) {
     this.name       = name;
     this.sources    = sources;
     this.submodules = submodules;

@@ -1,7 +1,7 @@
 package rainfall.workspace;
 
 import java.nio.file.Path;
-import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a Rainfall workspace. Thrice sources are modeled with the given
@@ -16,14 +16,14 @@ public final class Workspace<Model> {
   /**
    * Packages in the workspace.
    */
-  public final List<Package<Model>> packages;
+  public final Map<PhysicalName, Package<Model>> packages;
 
   /**
    * Constructs a workspace.
    *
    * @param packages Packages in the constructed workspace.
    */
-  public Workspace(Path path, List<Package<Model>> packages) {
+  public Workspace(Path path, Map<PhysicalName, Package<Model>> packages) {
     this.path     = path;
     this.packages = packages;
   }
