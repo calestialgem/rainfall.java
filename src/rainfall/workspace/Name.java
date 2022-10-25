@@ -20,17 +20,17 @@ public class Name {
 
     // Check the first character.
     char initial = value.charAt(0);
-    if ((initial < 'a' || initial > 'z') && initial != '_')
+    if (initial < 'a' || initial > 'z')
       throw new InvalidNameException(
-        "Name must start with a lowercase English letter or an underscore!");
+        "Name must start with a lowercase English letter!");
 
     // Check the rest of the characters.
     for (int index = 1; index < value.length(); index++) {
       char character = value.charAt(index);
       if ((character < 'a' || character > 'z')
-        && (character < '0' || character > '9') && character != '_')
+        && (character < '0' || character > '9'))
         throw new InvalidNameException(
-          "Name must consist of lowercase English letters, decimal digits and underscores!");
+          "Name must solely consist of lowercase English letters and decimal digits!");
     }
 
     // Check the value as a whole.

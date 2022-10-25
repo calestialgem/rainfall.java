@@ -34,8 +34,8 @@ A _source_ is a file that has UTF-8 encoded text in it, which is a list of
 symbol definitions.
 
 File extension of a source is `.tr`. Name of a source can only contain the
-lowercase English letters, decimal digits and underscores. It cannot start with
-a decimal digit.
+lowercase English letters and decimal digits. It cannot start with a decimal
+digit.
 
 ## Modules
 
