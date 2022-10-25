@@ -39,4 +39,14 @@ public final class Module<Model> {
     this.sources    = sources;
     this.submodules = submodules;
   }
+
+  /**
+   * Checks whether there are no source files contained by the module.
+   *
+   * @return Whether there are not any source files contained by the module.
+   */
+  public boolean isEmpty() {
+    return sources.isEmpty()
+      && submodules.values().stream().allMatch(Module::isEmpty);
+  }
 }
