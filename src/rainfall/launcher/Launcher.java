@@ -1,6 +1,6 @@
 package rainfall.launcher;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * Launches the compiler after parsing the configuration

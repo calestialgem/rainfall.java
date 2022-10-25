@@ -1,6 +1,6 @@
 package rainfall.launcher;
 
-import rainfall.workspace.*;
+import rainfall.workspace.PhysicalName;
 
 /**
  * Creates a new package with the given name in the workspace if a package

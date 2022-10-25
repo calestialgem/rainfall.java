@@ -1,6 +1,6 @@
 package rainfall.workspace;
 
-import java.nio.file.*;
+import java.nio.file.Path;
 
 /**
  * Represents a Thrice source that is modeled with the given extra data.

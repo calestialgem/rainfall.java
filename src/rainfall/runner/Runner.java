@@ -3,6 +3,6 @@ package rainfall.runner;
 /**
  * Runs the generated C file.
  */
-public class Runner {
+public final class Runner {
 
 }

@@ -9,7 +9,7 @@ public final class InvalidNameException extends Exception {
    *
    * @param message Explanation of why the name was invalid.
    */
-  public InvalidNameException(String message) {
+  InvalidNameException(String message) {
     super(message);
   }
 }

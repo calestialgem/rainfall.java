@@ -1,7 +1,7 @@
 package rainfall.workspace;
 
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.Path;
+import java.util.List;
 
 /**
  * Represents a Rainfall workspace. Thrice sources are modeled with the given

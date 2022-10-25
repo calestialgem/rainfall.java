@@ -1,11 +1,25 @@
 package rainfall.main;
 
-import java.nio.file.*;
-import java.util.*;
-import java.util.stream.*;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
 
-import rainfall.launcher.*;
-import rainfall.workspace.*;
+import rainfall.launcher.Build;
+import rainfall.launcher.Check;
+import rainfall.launcher.Command;
+import rainfall.launcher.Directory;
+import rainfall.launcher.Launcher;
+import rainfall.launcher.New;
+import rainfall.launcher.Option;
+import rainfall.launcher.Run;
+import rainfall.launcher.Test;
+import rainfall.workspace.InvalidNameException;
+import rainfall.workspace.PhysicalName;
 
 /**
  * Parses the arguments that were read from the command line and passes them to

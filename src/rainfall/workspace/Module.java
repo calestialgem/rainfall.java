@@ -1,6 +1,6 @@
 package rainfall.workspace;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Represents a Thrice module. Thrice sources are modeled with the given extra

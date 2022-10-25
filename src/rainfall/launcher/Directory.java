@@ -1,6 +1,6 @@
 package rainfall.launcher;
 
-import java.nio.file.*;
+import java.nio.file.Path;
 
 /**
  * Option that sets the path to the workspace directory. The current working

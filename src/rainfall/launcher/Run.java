@@ -1,8 +1,8 @@
 package rainfall.launcher;
 
-import java.util.*;
+import java.util.List;
 
-import rainfall.workspace.*;
+import rainfall.workspace.PhysicalName;
 
 /**
  * Runs the given executable package if it builds.

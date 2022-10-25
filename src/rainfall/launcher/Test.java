@@ -1,8 +1,8 @@
 package rainfall.launcher;
 
-import java.util.*;
+import java.util.List;
 
-import rainfall.workspace.*;
+import rainfall.workspace.PhysicalName;
 
 /**
  * Tests the given package or packages, or all the packages in the workspace

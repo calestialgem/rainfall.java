@@ -1,6 +1,6 @@
 package rainfall.launcher;
 
-import rainfall.workspace.*;
+import rainfall.workspace.PhysicalName;
 
 /**
  * Generates the C file of the given executable package if it and all its
