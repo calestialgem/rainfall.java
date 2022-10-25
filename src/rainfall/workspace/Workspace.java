@@ -1,5 +1,6 @@
 package rainfall.workspace;
 
+import java.nio.file.*;
 import java.util.*;
 
 /**
@@ -7,6 +8,11 @@ import java.util.*;
  * extra data.
  */
 public final class Workspace<Model> {
+  /**
+   * Path to the workspace's directory.
+   */
+  public final Path path;
+
   /**
    * Packages in the workspace.
    */
@@ -17,7 +23,8 @@ public final class Workspace<Model> {
    *
    * @param packages Packages in the constructed workspace.
    */
-  public Workspace(List<Package<Model>> packages) {
+  public Workspace(Path path, List<Package<Model>> packages) {
+    this.path     = path;
     this.packages = packages;
   }
 }
