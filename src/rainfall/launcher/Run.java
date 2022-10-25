@@ -16,7 +16,7 @@ public final class Run extends Command {
   /**
    * Arguments that will be passed to the run executable.
    */
-  public final List<Name> passed;
+  public final List<String> passed;
 
   /**
    * Constructs a run command.
@@ -26,7 +26,7 @@ public final class Run extends Command {
    * @param passed Arguments that will be passed to the executable that will be
    *               run by the constructed run command.
    */
-  public Run(Name run, List<Name> passed) {
+  public Run(Name run, List<String> passed) {
     this.run    = run;
     this.passed = passed;
   }
