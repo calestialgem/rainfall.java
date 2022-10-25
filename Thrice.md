@@ -48,8 +48,9 @@ Name of a module has the same rules as the name of a source.
 A _package_ is a module that is not contained by a supermodule.
 
 A package can be formed out of a single source without a directory, which is
-called a _single source package_. Name of a such a package is the name of the
-source that defines it. Such a source can include an entry point.
+called a _file package_; otherwise it is called a _directory package_. Name of a
+such a package is the name of the source that defines it. Such a source can
+include an entry point.
 
 A source with the name `main` that is contained by a package, which is a
 directory, is called the _main source_ and it must have an entry point.
