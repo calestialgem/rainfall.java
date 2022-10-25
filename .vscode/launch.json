@@ -8,7 +8,7 @@
       "mainClass": "rainfall/rainfall.main.Main",
       "projectName": "rainfall.java_d749c69e",
       "cwd": "${workspaceFolder}",
-      "args": ["--directory", "res", "new", "TestPackage"]
+      "args": ["--directory", "res", "new", "test_package"]
     }
   ]
 }

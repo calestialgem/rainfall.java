@@ -2,8 +2,10 @@ package rainfall.main;
 
 import java.nio.file.*;
 import java.util.*;
+import java.util.stream.*;
 
 import rainfall.launcher.*;
+import rainfall.workspace.*;
 
 /**
  * Parses the arguments that were read from the command line and passes them to
@@ -16,11 +18,7 @@ final class Main {
    * @param arguments Given command-line arguments.
    */
   public static void main(String[] arguments) {
-    try {
-      var launcher = new Main(arguments).parse();
-    } catch (ArgumentError error) {
-      System.err.println(error.getMessage());
-    }
+    var launcher = new Main(arguments).parse();
   }
 
   /**
@@ -227,8 +225,14 @@ final class Main {
           .formatted(command));
     var argument = consume();
 
-    checkName(command, argument);
-    return new New(argument);
+    try {
+      return new New(Name.of(argument));
+    } catch (InvalidNameException exception) {
+      throw new ArgumentError(
+        "Argument `%s` to the new command `%s` is not a valid package name!"
+          .formatted(argument, command),
+        exception);
+    }
   }
 
   /**
@@ -240,15 +244,16 @@ final class Main {
    * @return Parsed command.
    */
   private Command parseCheck(String command) {
-    // Check all the arguments.
-    var arguments = new ArrayList<String>();
-    while (has()) {
-      var argument = consume();
-      checkName(command, argument);
-      arguments.add(argument);
-    }
-
-    return new Check(arguments);
+    return new Check(Stream.of(remaining()).map(argument -> {
+      try {
+        return Name.of(argument);
+      } catch (InvalidNameException exception) {
+        throw new ArgumentError(
+          "Argument `%s` to the check command `%s` is not a valid package name!"
+            .formatted(argument, command),
+          exception);
+      }
+    }).toList());
   }
 
   /**
@@ -260,15 +265,16 @@ final class Main {
    * @return Parsed command.
    */
   private Command parseTest(String command) {
-    // Check all the arguments.
-    var arguments = new ArrayList<String>();
-    while (has()) {
-      var argument = consume();
-      checkName(command, argument);
-      arguments.add(argument);
-    }
-
-    return new Test(arguments);
+    return new Test(Stream.of(remaining()).map(argument -> {
+      try {
+        return Name.of(argument);
+      } catch (InvalidNameException exception) {
+        throw new ArgumentError(
+          "Argument `%s` to the test command `%s` is not a valid package name!"
+            .formatted(argument, command),
+          exception);
+      }
+    }).toList());
   }
 
   /**
@@ -287,8 +293,14 @@ final class Main {
           .formatted(command));
     var argument = consume();
 
-    checkName(command, argument);
-    return new Build(argument);
+    try {
+      return new Build(Name.of(argument));
+    } catch (InvalidNameException exception) {
+      throw new ArgumentError(
+        "Argument `%s` to the build command `%s` is not a valid package name!"
+          .formatted(argument, command),
+        exception);
+    }
   }
 
   /**
@@ -307,43 +319,13 @@ final class Main {
           .formatted(command));
     var argument = consume();
 
-    checkName(command, argument);
-
-    // All the arguments that will be passed to the run executable.
-    var remaining = List.of(remaining());
-
-    return new Run(argument, remaining);
-  }
-
-  /**
-   * Check the given package name.
-   *
-   * @param command Reported command.
-   * @param name    Checked package name.
-   */
-  private static void checkName(String command, String name) {
-    // Check whether there is a first character.
-    if (name.length() == 0)
+    try {
+      return new Run(Name.of(argument), List.of(remaining()));
+    } catch (InvalidNameException exception) {
       throw new ArgumentError(
-        "Given package name `%s` for the `%s` command is empty!"
-          .formatted(name, command));
-
-    // Check first character.
-    char initial = name.charAt(0);
-    if (initial < 'A' || initial > 'Z')
-      throw new ArgumentError(
-        "Initial `%c` of the given package name `%s` for the `%s` command is not an upper case English letter!"
-          .formatted(initial, name, command));
-
-    // Check the rest.
-    for (int index = 1; index < name.length(); index++) {
-      char character = name.charAt(index);
-      if ((character < 'A' || character > 'Z')
-        && (character < 'a' || character > 'z')
-        && (character < '0' || character > '9'))
-        throw new ArgumentError(
-          "Character `%c` in the given package name `%s` for the `%s` command is not an English letter or decimal digit!"
-            .formatted(character, name, command));
+        "Argument `%s` to the run command `%s` is not a valid package name!"
+          .formatted(argument, command),
+        exception);
     }
   }
 
@@ -366,11 +348,13 @@ final class Main {
   }
 
   /**
-   * Returns all the remaining arguments.
+   * Returns and consumes all the remaining arguments.
    *
    * @return Arguments from the current one to the last one.
    */
   private String[] remaining() {
-    return Arrays.copyOfRange(parsed, current, parsed.length);
+    var result = Arrays.copyOfRange(parsed, current, parsed.length);
+    current = parsed.length;
+    return result;
   }
 }
