@@ -1,5 +1,7 @@
 package rainfall.workspace;
 
+import rainfall.utility.Result;
+
 /**
  * Represents the name of physical elements of a Thrice program, which are
  * packages, modules, and sources.
@@ -11,26 +13,24 @@ public final class PhysicalName {
    * @param value Value that is converted.
    *
    * @return Converted name.
-   *
-   * @throws InvalidNameException If the value is invalid.
    */
-  public static PhysicalName of(String value) throws InvalidNameException {
+  public static Result<PhysicalName, String> of(String value) {
     // Check whether there is a value.
     if (value.isEmpty())
-      throw new InvalidNameException("Name is empty!");
+      return Result.ofFailure("Name is empty!");
 
     // Check the first character.
     char initial = value.charAt(0);
     if (initial < 'a' || initial > 'z')
-      throw new InvalidNameException(
-        "Name must start with a lowercase English letter!");
+      return Result
+        .ofFailure("Name must start with a lowercase English letter!");
 
     // Check the rest of the characters.
     for (int index = 1; index < value.length(); index++) {
       char character = value.charAt(index);
       if ((character < 'a' || character > 'z')
         && (character < '0' || character > '9'))
-        throw new InvalidNameException(
+        return Result.ofFailure(
           "Name must solely consist of lowercase English letters and decimal digits!");
     }
 
@@ -39,8 +39,8 @@ public final class PhysicalName {
       case "const", "let", "var", "bool", "signed", "unsigned", "byte", "short",
         "int", "long", "ixs", "float", "double", "class", "struct", "enum",
         "union", "variant", "module", "intern", "extern" ->
-        throw new InvalidNameException("Name cannot be a reserved word!");
-      default -> new PhysicalName(value);
+        Result.ofFailure("Name cannot be a reserved word!");
+      default -> Result.ofSuccess(new PhysicalName(value));
     };
   }
 
