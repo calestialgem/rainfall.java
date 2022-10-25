@@ -2,12 +2,12 @@ package rainfall.main;
 
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import rainfall.launcher.Build;
 import rainfall.launcher.Check;
@@ -18,7 +18,8 @@ import rainfall.launcher.New;
 import rainfall.launcher.Option;
 import rainfall.launcher.Run;
 import rainfall.launcher.Test;
-import rainfall.workspace.InvalidNameException;
+import rainfall.utility.Result;
+import rainfall.utility.Success;
 import rainfall.workspace.PhysicalName;
 
 /**
@@ -32,14 +33,18 @@ final class Main {
    * @param arguments Given command-line arguments.
    */
   public static void main(String[] arguments) {
-    var launcher = new Main(arguments).parse();
+    var result = new Main(List.of(arguments)).parse();
+    if (!(result instanceof Success<Launcher, String> launcher)) {
+      System.err.println(result.getError());
+      return;
+    }
   }
 
   /**
    * Command-line arguments, excluding the path to the executable, that will be
    * parsed.
    */
-  private final String[] parsed;
+  private final List<String> parsed;
 
   /**
    * Index to the currently parsed argument.
@@ -52,7 +57,7 @@ final class Main {
    * @param parsed List of command-line arguments, excluding the path to the
    *               executable, that will be parsed.
    */
-  private Main(String[] parsed) {
+  private Main(List<String> parsed) {
     this.parsed = parsed;
   }
 
@@ -61,10 +66,11 @@ final class Main {
    *
    * @return Launcher with the parsed options and command.
    */
-  private Launcher parse() {
+  private Result<Launcher, String> parse() {
     // Initialize mutable state.
     current = 0;
-    return new Launcher(parseOptions(), parseCommand());
+    return parseOptions().bind(
+      options -> parseCommand().map(command -> new Launcher(options, command)));
   }
 
   /**
@@ -72,17 +78,19 @@ final class Main {
    *
    * @return All parsed options.
    */
-  private Map<Class<? extends Option>, Option> parseOptions() {
+  private Result<Map<Class<? extends Option>, Option>, String> parseOptions() {
     // Parse an option until cannot.
-    var result = new HashMap<Class<? extends Option>, Option>();
+    var options = new HashMap<Class<? extends Option>, Option>();
     while (true) {
       var optionResult = parseOption();
-      if (optionResult.isEmpty())
+      if (optionResult.isFailed())
+        return optionResult.propagate();
+      if (optionResult.getValue().isEmpty())
         break;
-      var option = optionResult.get();
-      result.put(option.getClass(), option);
+      var option = optionResult.getValue().get();
+      options.put(option.getClass(), option);
     }
-    return result;
+    return Result.ofSuccess(options);
   }
 
   /**
@@ -90,43 +98,44 @@ final class Main {
    *
    * @return Whether an option was parsed.
    */
-  private Optional<Option> parseOption() {
+  private Result<Optional<Option>, String> parseOption() {
     // Check whether there is an argument.
     if (!has())
-      return Optional.empty();
+      return Result.ofSuccess(Optional.empty());
     var option = consume();
 
     // Check whether the argument can be an option shortcut.
     if (option.length() == 2 && option.charAt(0) == '-') {
       var shortcut = option.charAt(1);
-      return Optional.of(switch (shortcut) {
-        case 'd' -> parseDirectory(option);
-        default -> throw new ArgumentError(
+      return switch (shortcut) {
+        case 'd' -> parseDirectory(option).map(Optional::of);
+        default -> Result.ofFailure(
           """
           Could not recognize option shortcut `%s`!
           Use:
            - directory (d): set workspace directory
           """.formatted(shortcut));
-      });
+      };
+
     }
 
     // Check whether the argument can be an option name.
     if (option.length() > 2 && option.startsWith("--")) {
       var name = option.substring(2);
-      return Optional.of(switch (name) {
-        case "directory" -> parseDirectory(option);
-        default -> throw new ArgumentError(
+      return switch (name) {
+        case "directory" -> parseDirectory(option).map(Optional::of);
+        default -> Result.ofFailure(
           """
           Could not recognize option name `%s`!
           Use:
            - directory (d): set workspace directory
           """.formatted(name));
-      });
+      };
     }
 
     // Not an option if none matched. Need to roll back the consumed argument.
     current--;
-    return Optional.empty();
+    return Result.ofSuccess(Optional.empty());
   }
 
   /**
@@ -135,10 +144,10 @@ final class Main {
    * @param option Argument that indicated the option. Used for reporting to
    *               user on error.
    */
-  private Option parseDirectory(String option) {
+  private Result<Option, String> parseDirectory(String option) {
     // Check whether the path to workspace directory argument exists.
     if (!has())
-      throw new ArgumentError(
+      return Result.ofFailure(
         "Expected workspace directory argument for directory option after `%s`!"
           .formatted(option));
     var argument = consume();
@@ -150,28 +159,27 @@ final class Main {
 
       // Check the given workspace path.
       if (!file.exists())
-        throw new ArgumentError(
+        return Result.ofFailure(
           "Given workspace path `%s` for the option `%s` does not exists!"
             .formatted(argument, option));
       if (!file.isDirectory())
-        throw new ArgumentError(
+        return Result.ofFailure(
           "Given workspace path `%s` for the option `%s` is not a directory!"
             .formatted(argument, option));
       if (!file.canRead())
-        throw new ArgumentError(
+        return Result.ofFailure(
           "Given workspace path `%s` for the option `%s` is not readable!"
             .formatted(argument, option));
       if (!file.canWrite())
-        throw new ArgumentError(
+        return Result.ofFailure(
           "Given workspace path `%s` for the option `%s` is not writable!"
             .formatted(argument, option));
 
-      return new Directory(workspace);
+      return Result.ofSuccess(new Directory(workspace));
     } catch (InvalidPathException exception) {
-      throw new ArgumentError(
-        "Given workspace argument `%s` for the option `%s` is not a path!"
-          .formatted(argument, option),
-        exception);
+      return Result.ofFailure(
+        "Given workspace argument `%s` for the option `%s` is not a path!%n%s"
+          .formatted(argument, option, exception.getLocalizedMessage()));
     }
   }
 
@@ -180,10 +188,10 @@ final class Main {
    *
    * @return Parsed command.
    */
-  private Command parseCommand() {
+  private Result<Command, String> parseCommand() {
     // Check whether a command is given.
     if (!has())
-      throw new ArgumentError(
+      return Result.ofFailure(
         """
         There is no command given!
         Use:
@@ -197,12 +205,12 @@ final class Main {
 
     // Dispatch to command name or shortcut.
     var result = switch (command) {
-      case "new", "n" -> parseNew(command);
-      case "check", "c" -> parseCheck(command);
-      case "test", "t" -> parseTest(command);
-      case "build", "b" -> parseBuild(command);
-      case "run", "r" -> parseRun(command);
-      default -> throw new ArgumentError(
+      case "new", "n" -> parseNew();
+      case "check", "c" -> parseCheck();
+      case "test", "t" -> parseTest();
+      case "build", "b" -> parseBuild();
+      case "run", "r" -> parseRun();
+      default -> Result.<Command, String>ofFailure(
         """
         Could not recognize command `%s`!
         Use:
@@ -215,10 +223,9 @@ final class Main {
     };
 
     // Check whether all the arguments are consumed.
-    if (has())
-      throw new ArgumentError(
-        "Unexpected arguments `%s` after the command `%s`!"
-          .formatted(String.join(" ", remaining()), command));
+    result = result.check(c -> !has(),
+      () -> "Unexpected arguments `%s` after the command `%s`!"
+        .formatted(String.join(" ", remaining()), command));
 
     return result;
   }
@@ -231,22 +238,14 @@ final class Main {
    *
    * @return Parsed command.
    */
-  private Command parseNew(String command) {
+  private Result<Command, String> parseNew() {
     // Check whether a name for the created package is given.
     if (!has())
-      throw new ArgumentError(
-        "Expected a name for the new package that will be created for the `%s` command!"
-          .formatted(command));
+      return Result.ofFailure(
+        "Expected a name for the new package that will be created!");
     var argument = consume();
 
-    try {
-      return new New(PhysicalName.of(argument));
-    } catch (InvalidNameException exception) {
-      throw new ArgumentError(
-        "Argument `%s` to the new command `%s` is not a valid package name!"
-          .formatted(argument, command),
-        exception);
-    }
+    return PhysicalName.of(argument).map(New::new);
   }
 
   /**
@@ -257,17 +256,12 @@ final class Main {
    *
    * @return Parsed command.
    */
-  private Command parseCheck(String command) {
-    return new Check(Stream.of(remaining()).map(argument -> {
-      try {
-        return PhysicalName.of(argument);
-      } catch (InvalidNameException exception) {
-        throw new ArgumentError(
-          "Argument `%s` to the check command `%s` is not a valid package name!"
-            .formatted(argument, command),
-          exception);
-      }
-    }).toList());
+  private Result<Command, String> parseCheck() {
+    return uniqueRemaining().bind(
+      arguments -> Result.combine(
+        arguments.stream().map(PhysicalName::of).toList(),
+        names -> new Check(names), errors -> String.join(System.lineSeparator(),
+          errors.toArray(String[]::new))));
   }
 
   /**
@@ -278,17 +272,12 @@ final class Main {
    *
    * @return Parsed command.
    */
-  private Command parseTest(String command) {
-    return new Test(Stream.of(remaining()).map(argument -> {
-      try {
-        return PhysicalName.of(argument);
-      } catch (InvalidNameException exception) {
-        throw new ArgumentError(
-          "Argument `%s` to the test command `%s` is not a valid package name!"
-            .formatted(argument, command),
-          exception);
-      }
-    }).toList());
+  private Result<Command, String> parseTest() {
+    return uniqueRemaining().bind(
+      arguments -> Result.combine(
+        arguments.stream().map(PhysicalName::of).toList(),
+        names -> new Test(names), errors -> String.join(System.lineSeparator(),
+          errors.toArray(String[]::new))));
   }
 
   /**
@@ -299,22 +288,14 @@ final class Main {
    *
    * @return Parsed command.
    */
-  private Command parseBuild(String command) {
+  private Result<Command, String> parseBuild() {
     // Check whether a name for the built package is given.
     if (!has())
-      throw new ArgumentError(
-        "Expected a name for the executable package that will be built for the `%s` command!"
-          .formatted(command));
+      return Result.ofFailure(
+        "Expected a name for the executable package that will be built!");
     var argument = consume();
 
-    try {
-      return new Build(PhysicalName.of(argument));
-    } catch (InvalidNameException exception) {
-      throw new ArgumentError(
-        "Argument `%s` to the build command `%s` is not a valid package name!"
-          .formatted(argument, command),
-        exception);
-    }
+    return PhysicalName.of(argument).map(Build::new);
   }
 
   /**
@@ -325,22 +306,38 @@ final class Main {
    *
    * @return Parsed command.
    */
-  private Command parseRun(String command) {
+  private Result<Command, String> parseRun() {
     // Check whether a name for the run package is given.
     if (!has())
-      throw new ArgumentError(
-        "Expected a name for the executable package that will be run for the `%s` command!"
-          .formatted(command));
+      return Result.ofFailure(
+        "Expected a name for the executable package that will be run!");
     var argument = consume();
 
-    try {
-      return new Run(PhysicalName.of(argument), List.of(remaining()));
-    } catch (InvalidNameException exception) {
-      throw new ArgumentError(
-        "Argument `%s` to the run command `%s` is not a valid package name!"
-          .formatted(argument, command),
-        exception);
-    }
+    return PhysicalName.of(argument).map(name -> new Run(name, remaining()));
+  }
+
+  /**
+   * Checks uniqueness of the remaining arguments.
+   *
+   * @return Set of remaining arguments.
+   */
+  private Result<Set<String>, String> uniqueRemaining() {
+    var arguments       = remaining();
+    var uniqueArguments = arguments.stream().collect(Collectors.toSet());
+    if (uniqueArguments.size() < arguments.size())
+      return Result.ofFailure("There are duplicate arguments!");
+    return Result.ofSuccess(uniqueArguments);
+  }
+
+  /**
+   * Returns and consumes all the remaining arguments.
+   *
+   * @return Arguments from the current one to the last one.
+   */
+  private List<String> remaining() {
+    var result = parsed.subList(current, parsed.size());
+    current = parsed.size();
+    return result;
   }
 
   /**
@@ -349,7 +346,7 @@ final class Main {
    * @return Whether the current argument exists.
    */
   private boolean has() {
-    return current < parsed.length;
+    return current < parsed.size();
   }
 
   /**
@@ -358,17 +355,6 @@ final class Main {
    * @return Currently parsed argument.
    */
   private String consume() {
-    return parsed[current++];
-  }
-
-  /**
-   * Returns and consumes all the remaining arguments.
-   *
-   * @return Arguments from the current one to the last one.
-   */
-  private String[] remaining() {
-    var result = Arrays.copyOfRange(parsed, current, parsed.length);
-    current = parsed.length;
-    return result;
+    return parsed.get(current++);
   }
 }
