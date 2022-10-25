@@ -117,7 +117,8 @@ public final class Loader {
     var fileStub   = fileName.substring(0, fileName.length() - ".tr".length());
     var nameResult = PhysicalName.of(fileStub);
     if (nameResult.isFailed())
-      return nameResult.propagate();
+      return Result.ofFailure("Failed to load the source at `%s` due to:%n%s"
+        .formatted(file.toString(), nameResult.getError()));
 
     // Load the contents.
     try {
@@ -126,7 +127,8 @@ public final class Loader {
       var source   = new Source<>(nameResult.getValue(), file, model);
       return Result.ofSuccess(Optional.of(source));
     } catch (IOException exception) {
-      return Result.ofFailure(exception.getLocalizedMessage());
+      return Result.ofFailure("Failed to load the source at `%s` due to:%n%s"
+        .formatted(file.toString(), exception.getLocalizedMessage()));
     }
   }
 
@@ -172,8 +174,9 @@ public final class Loader {
 
     // If there were an error, join all of them and return.
     if (!errors.isEmpty())
-      return Result.ofFailure(
-        String.join(System.lineSeparator(), errors.toArray(String[]::new)));
+      return Result.ofFailure("Failed to load the module at `%s` due to:%n%s"
+        .formatted(directory.toString(),
+          String.join(System.lineSeparator(), errors.toArray(String[]::new))));
 
     // Return the module if it is not empty. If there are no source files, this
     // is a random directory whose name happened to match the rules of a Thrice

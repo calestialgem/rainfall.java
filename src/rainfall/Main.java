@@ -38,6 +38,7 @@ final class Main {
       System.err.println(result.getError());
       return;
     }
+    launcher.value.launch();
   }
 
   /**
