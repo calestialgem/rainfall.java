@@ -226,7 +226,7 @@ final class Main {
     var argument = consume();
 
     try {
-      return new New(Name.of(argument));
+      return new New(PhysicalName.of(argument));
     } catch (InvalidNameException exception) {
       throw new ArgumentError(
         "Argument `%s` to the new command `%s` is not a valid package name!"
@@ -246,7 +246,7 @@ final class Main {
   private Command parseCheck(String command) {
     return new Check(Stream.of(remaining()).map(argument -> {
       try {
-        return Name.of(argument);
+        return PhysicalName.of(argument);
       } catch (InvalidNameException exception) {
         throw new ArgumentError(
           "Argument `%s` to the check command `%s` is not a valid package name!"
@@ -267,7 +267,7 @@ final class Main {
   private Command parseTest(String command) {
     return new Test(Stream.of(remaining()).map(argument -> {
       try {
-        return Name.of(argument);
+        return PhysicalName.of(argument);
       } catch (InvalidNameException exception) {
         throw new ArgumentError(
           "Argument `%s` to the test command `%s` is not a valid package name!"
@@ -294,7 +294,7 @@ final class Main {
     var argument = consume();
 
     try {
-      return new Build(Name.of(argument));
+      return new Build(PhysicalName.of(argument));
     } catch (InvalidNameException exception) {
       throw new ArgumentError(
         "Argument `%s` to the build command `%s` is not a valid package name!"
@@ -320,7 +320,7 @@ final class Main {
     var argument = consume();
 
     try {
-      return new Run(Name.of(argument), List.of(remaining()));
+      return new Run(PhysicalName.of(argument), List.of(remaining()));
     } catch (InvalidNameException exception) {
       throw new ArgumentError(
         "Argument `%s` to the run command `%s` is not a valid package name!"

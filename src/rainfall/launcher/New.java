@@ -10,7 +10,7 @@ public final class New extends Command {
   /**
    * Name of the package that will be created.
    */
-  public final Name created;
+  public final PhysicalName created;
 
   /**
    * Constructs a new command.
@@ -18,7 +18,7 @@ public final class New extends Command {
    * @param created Name of the package that will be created by the constructed
    *                new command.
    */
-  public New(Name created) {
+  public New(PhysicalName created) {
     this.created = created;
   }
 }

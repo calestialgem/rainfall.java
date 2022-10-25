@@ -13,7 +13,7 @@ public final class Check extends Command {
    * Names of the packages that will be checked. Will check all the packages in
    * the workspace when it is left empty.
    */
-  public final List<Name> checked;
+  public final List<PhysicalName> checked;
 
   /**
    * Constructs a check command.
@@ -21,7 +21,7 @@ public final class Check extends Command {
    * @param checked Names of the packages that will be checked by the
    *                constructed check command.
    */
-  public Check(List<Name> checked) {
+  public Check(List<PhysicalName> checked) {
     this.checked = checked;
   }
 }

@@ -1,9 +1,10 @@
 package rainfall.workspace;
 
 /**
- * Represents name of a Thrice package, module, or source.
+ * Represents the name of physical elements of a Thrice program, which are
+ * packages, modules, and sources.
  */
-public class Name {
+public class PhysicalName {
   /**
    * Convert the given value to a name.
    *
@@ -13,7 +14,7 @@ public class Name {
    *
    * @throws InvalidNameException If the value is invalid.
    */
-  public static Name of(String value) throws InvalidNameException {
+  public static PhysicalName of(String value) throws InvalidNameException {
     // Check whether there is a value.
     if (value.isEmpty())
       throw new InvalidNameException("Name is empty!");
@@ -39,7 +40,7 @@ public class Name {
         "int", "long", "ixs", "float", "double", "class", "struct", "enum",
         "union", "variant", "module", "intern", "extern" ->
         throw new InvalidNameException("Name cannot be a reserved word!");
-      default -> new Name(value);
+      default -> new PhysicalName(value);
     };
   }
 
@@ -53,7 +54,7 @@ public class Name {
    *
    * @param value Value of the constructed name.
    */
-  private Name(String value) {
+  private PhysicalName(String value) {
     this.value = value;
   }
 }

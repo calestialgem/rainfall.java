@@ -10,7 +10,7 @@ public final class Build extends Command {
   /**
    * Name of the executable package that will be built.
    */
-  public final Name built;
+  public final PhysicalName built;
 
   /**
    * Constructs a build command.
@@ -18,7 +18,7 @@ public final class Build extends Command {
    * @param built Name of the executable package that will be built by the
    *              constructed build command.
    */
-  public Build(Name built) {
+  public Build(PhysicalName built) {
     this.built = built;
   }
 }
