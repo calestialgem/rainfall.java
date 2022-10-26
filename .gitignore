@@ -1,2 +1,8 @@
 # Compiled Java source files.
 bin
+
+# Eclipse workspace settings.
+.metadata/
+
+# Eclipse project settings.
+.settings
