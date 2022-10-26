@@ -1,5 +1,7 @@
 package rainfall;
 
+import java.util.function.Function;
+
 public sealed interface Result<Value, Error> {
   record Success<Value, Error> (Value value) implements Result<Value, Error> {
     @Override public boolean isSuccess() { return true; }
@@ -10,6 +12,11 @@ public sealed interface Result<Value, Error> {
 
     @Override public Error getError() {
       throw new RuntimeException("Result is success!");
+    }
+
+    @Override public <Target> Result<Target, Error>
+        map(Function<Value, Target> mapper) {
+      return success(mapper.apply(value));
     }
   }
 
@@ -23,6 +30,11 @@ public sealed interface Result<Value, Error> {
     }
 
     @Override public Error getError() { return error; }
+
+    @Override public <Target> Result<Target, Error>
+        map(Function<Value, Target> mapper) {
+      return failure(error);
+    }
   }
 
   static <Value, Error> Result<Value, Error> success(Value value) {
@@ -37,4 +49,9 @@ public sealed interface Result<Value, Error> {
   boolean isFailure();
   Value get();
   Error getError();
+  <Target> Result<Target, Error> map(Function<Value, Target> mapper);
+
+  default <Target> Result<Target, Error> propagate() {
+    return failure(getError());
+  }
 }

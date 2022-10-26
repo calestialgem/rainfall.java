@@ -6,7 +6,7 @@ import java.util.Map;
 import rainfall.Result;
 
 public sealed interface Option {
-  record Directory(Path workspace) implements Option {}
+  record Directory(Path path) implements Option {}
 
   static Result<Void, String>
       register(Map<Class<? extends Option>, Option> target, Option inserted) {
