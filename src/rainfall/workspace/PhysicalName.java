@@ -83,22 +83,47 @@ public class PhysicalName {
 
   /**
    * Run all the unit tests for {@link PhysicalName}.
-   * 
+   *
    * @param tester Used unit test runner.
    */
   public static void test(final Tester tester) {
+    // Test whether the lower limit of the range is checked.
     tester.run(() -> !inRange(0, 1, 1));
+
+    // Test whether the upper limit of the range is checked.
     tester.run(() -> !inRange(2, 1, 1));
+
+    // Test whether range checking works correctly.
     tester.run(() -> inRange(1, 1, 1));
 
+    // Test whether uppercase comparing works correctly.
     tester.run(() -> isUppercase((byte) 'A'));
+
+    // Test whether lowercase comparing works correctly.
     tester.run(() -> isLowercase((byte) 'a'));
+
+    // Test whether digit comparing works correctly.
     tester.run(() -> isDigit((byte) '0'));
 
-    tester.run(of("")::isFailure);
-    tester.run(of("someName")::isFailure);
-    tester.run(of("S")::isSuccess);
-    tester.run(of("S0m3_N4m3")::isFailure);
-    tester.run(of("SomeName")::isSuccess);
+    // Test whether empty names are checked.
+    tester.run(() -> of("").isFailure());
+
+    // Test whether empty names are checked.
+    tester.run(() -> of("s").isFailure());
+
+    // Test whether the initial is checked.
+    tester.run(() -> of("S").isSuccess());
+
+    // Test whether invalid body is checked.
+    tester.run(() -> of("S_").isFailure());
+
+    // Test whether uppercase letter in body is allowed.
+    tester.run(() -> of("SO").isSuccess());
+
+    // Test whether lowercase letter in body is allowed.
+    tester.run(() -> of("So").isSuccess());
+
+    // Test whether decimal digit in body is allowed.
+    tester.run(() -> of("S0").isSuccess());
   }
 }

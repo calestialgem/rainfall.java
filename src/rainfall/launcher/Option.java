@@ -47,9 +47,19 @@ public sealed interface Option {
    * @param tester Used unit test runner.
    */
   static void test(final Tester tester) {
-    final var option  = new Directory(Path.of("."));
-    final var options = new HashMap<Class<? extends Option>, Option>();
-    tester.run(register(options, option)::isSuccess);
-    tester.run(register(options, option)::isFailure);
+    // Test registering an option for the first time.
+    tester.run(() -> {
+      final var option  = new Directory(Path.of("."));
+      final var options = new HashMap<Class<? extends Option>, Option>();
+      return register(options, option).isSuccess();
+    });
+
+    // Test registering an option for the second time.
+    tester.run(() -> {
+      final var option  = new Directory(Path.of("."));
+      final var options = new HashMap<Class<? extends Option>, Option>();
+      return register(options, option).isSuccess()
+        && register(options, option).isFailure();
+    });
   }
 }

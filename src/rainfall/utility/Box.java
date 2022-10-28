@@ -25,11 +25,17 @@ public sealed interface Box<Held> {
      * @param tester Used unit test runner.
      */
     private static void test(final Tester tester) {
-      final var boxed = 1;
-      final var box   = new Full<>(boxed);
-      tester.run(box::isFull);
-      tester.run(() -> !box.isEmpty());
-      tester.run(() -> box.get() == boxed);
+      // Test whether a full box is actually full.
+      tester.run(() -> new Full<>(1).isFull());
+
+      // Test whether a full box is actually not empty.
+      tester.run(() -> !new Full<>(1).isEmpty());
+
+      // Test accessing the contained value.
+      tester.run(() -> {
+        final var boxed = 1;
+        return new Full<>(boxed).get() == boxed;
+      });
     }
   }
 
@@ -51,9 +57,11 @@ public sealed interface Box<Held> {
      * @param tester Used unit test runner.
      */
     private static void test(final Tester tester) {
-      final var box = new Empty<>();
-      tester.run(() -> !box.isFull());
-      tester.run(box::isEmpty);
+      // Test whether an empty box is actually not full.
+      tester.run(() -> !new Empty<>().isFull());
+
+      // Test whether an empty box is actually empty.
+      tester.run(() -> new Empty<>().isEmpty());
     }
   }
 
@@ -98,11 +106,14 @@ public sealed interface Box<Held> {
    * @param tester Used unit test runner.
    */
   static void test(final Tester tester) {
+    // Run sub-test suites.
     Full.test(tester);
     Empty.test(tester);
-    final var full  = Box.full(1);
-    final var empty = Box.empty();
-    tester.run(full::isFull);
-    tester.run(empty::isEmpty);
+
+    // Test whether a created full box is actually full.
+    tester.run(() -> full(1).isFull());
+
+    // Test whether a created empty box is actually empty.
+    tester.run(() -> empty().isEmpty());
   }
 }

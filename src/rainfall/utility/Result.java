@@ -35,11 +35,17 @@ public sealed interface Result<Value, Error> {
      * @param tester Used unit test runner.
      */
     private static void test(final Tester tester) {
-      final var value  = 1;
-      final var result = new Success<>(value);
-      tester.run(result::isSuccess);
-      tester.run(() -> !result.isFailure());
-      tester.run(() -> result.value() == value);
+      // Test whether a successful result is actually a success.
+      tester.run(() -> new Success<>(1).isSuccess());
+
+      // Test whether a successful result is actually not a failure.
+      tester.run(() -> !new Success<>(1).isFailure());
+
+      // Test accessing the resulted value.
+      tester.run(() -> {
+        final var value = 1;
+        return new Success<>(value).value() == value;
+      });
     }
   }
 
@@ -65,11 +71,17 @@ public sealed interface Result<Value, Error> {
      * @param tester Used unit test runner.
      */
     private static void test(final Tester tester) {
-      final var error  = 1;
-      final var result = new Failure<>(error);
-      tester.run(() -> !result.isSuccess());
-      tester.run(result::isFailure);
-      tester.run(() -> result.error() == error);
+      // Test whether a failed result is actually not a success.
+      tester.run(() -> !new Failure<>(1).isSuccess());
+
+      // Test whether a failed result is actually a failure.
+      tester.run(() -> new Failure<>(1).isFailure());
+
+      // Test accessing the resulted error.
+      tester.run(() -> {
+        final var error = 1;
+        return new Failure<>(error).error() == error;
+      });
     }
   }
 
@@ -176,13 +188,18 @@ public sealed interface Result<Value, Error> {
    * @param tester Used unit test runner.
    */
   static void test(final Tester tester) {
+    // Run sub-test suites.
     Success.test(tester);
     Failure.test(tester);
-    final var success = success(1);
-    final var failure = failure(1);
-    tester.run(success::isSuccess);
-    tester.run(failure::isFailure);
 
+    // Test whether a created successful result is actually a success.
+    tester.run(() -> success(1).isSuccess());
+
+    // Test whether a created failed result is actually a failure.
+    tester.run(() -> failure(1).isFailure());
+
+    // Test whether combination of results with a failure in them, actually
+    // combines errors.
     tester.run(() -> {
       final BinaryOperator<Integer>          reducer  =
         (left, right) -> left + right;
@@ -196,6 +213,8 @@ public sealed interface Result<Value, Error> {
       return combined.isFailure() && combined.error() == 1;
     });
 
+    // Test whether combination of results without a failure in them, actually
+    // combines values.
     tester.run(() -> {
       final BinaryOperator<Integer>          reducer  =
         (left, right) -> left + right;
@@ -209,18 +228,21 @@ public sealed interface Result<Value, Error> {
       return combined.isSuccess() && combined.value() == 4;
     });
 
+    // Test propagation of resulted errors.
     tester.run(() -> {
       final Result<Integer, Integer> first  = failure(1);
       final Result<String, Integer>  second = first.propagate();
       return second.isFailure() && second.error().equals(first.error());
     });
 
+    // Test whether mapping a failure just propagates it.
     tester.run(() -> {
       final Result<Integer, Integer> first  = failure(1);
       final Result<String, Integer>  second = first.map(String::valueOf);
       return second.isFailure() && second.error().equals(first.error());
     });
 
+    // Test whether mapping a success actually maps it.
     tester.run(() -> {
       final Result<Integer, Integer> first  = success(1);
       final Result<String, Integer>  second = first.map(String::valueOf);
