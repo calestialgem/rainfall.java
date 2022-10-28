@@ -1,6 +1,7 @@
 package rainfall;
 
 import rainfall.utility.Box;
+import rainfall.utility.Result;
 import rainfall.utility.Tester;
 
 record CLIEntry() {
@@ -14,6 +15,7 @@ record CLIEntry() {
   private static boolean test() {
     final var tester = new Tester();
     Box.test(tester);
+    Result.test(tester);
     return tester.report();
   }
 }

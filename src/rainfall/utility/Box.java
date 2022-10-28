@@ -7,7 +7,7 @@ public sealed interface Box<Held> {
     @Override public Held get() { return value; }
 
     private static void test(Tester tester) {
-      final var boxed = 5;
+      final var boxed = 1;
       final var box   = new Full<>(boxed);
       tester.run(box::isFull, "Full-Box Fullness Check");
       tester.run(() -> !box.isEmpty(), "Full-Box Emptiness Check");
