@@ -9,9 +9,9 @@ public sealed interface Box<Held> {
     private static void test(Tester tester) {
       final var boxed = 1;
       final var box   = new Full<>(boxed);
-      tester.run(box::isFull, "Full-Box Fullness Check");
-      tester.run(() -> !box.isEmpty(), "Full-Box Emptiness Check");
-      tester.run(() -> box.get() == boxed, "Boxed Value Access");
+      tester.run(box::isFull);
+      tester.run(() -> !box.isEmpty());
+      tester.run(() -> box.get() == boxed);
     }
   }
 
@@ -22,8 +22,8 @@ public sealed interface Box<Held> {
 
     private static void test(Tester tester) {
       final var box = new Empty<>();
-      tester.run(() -> !box.isFull(), "Empty-Box Fullness Check");
-      tester.run(box::isEmpty, "Empty-Box Emptiness Check");
+      tester.run(() -> !box.isFull());
+      tester.run(box::isEmpty);
     }
   }
 
@@ -39,7 +39,7 @@ public sealed interface Box<Held> {
     Empty.test(tester);
     final var full  = Box.full(1);
     final var empty = Box.empty();
-    tester.run(full::isFull, "Full-Box Creation");
-    tester.run(empty::isEmpty, "Empty-Box Creation");
+    tester.run(full::isFull);
+    tester.run(empty::isEmpty);
   }
 }

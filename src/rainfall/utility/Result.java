@@ -12,9 +12,9 @@ public sealed interface Result<Value, Error> {
     private static void test(Tester tester) {
       final var value  = 1;
       final var result = new Success<>(value);
-      tester.run(result::isSuccess, "Successful Result Success Check");
-      tester.run(() -> !result.isFailure(), "Successful Result Failure Check");
-      tester.run(() -> result.value() == value, "Result Value Access");
+      tester.run(result::isSuccess);
+      tester.run(() -> !result.isFailure());
+      tester.run(() -> result.value() == value);
     }
   }
 
@@ -29,9 +29,9 @@ public sealed interface Result<Value, Error> {
     private static void test(Tester tester) {
       final var error  = 1;
       final var result = new Failure<>(error);
-      tester.run(() -> !result.isSuccess(), "Failed Result Success Check");
-      tester.run(result::isFailure, "Failed Result Failure Check");
-      tester.run(() -> result.error() == error, "Result Error Access");
+      tester.run(() -> !result.isSuccess());
+      tester.run(result::isFailure);
+      tester.run(() -> result.error() == error);
     }
   }
 
@@ -48,8 +48,8 @@ public sealed interface Result<Value, Error> {
     Failure.test(tester);
     final var success = success(1);
     final var failure = failure(1);
-    tester.run(success::isSuccess, "Successful Result Creation");
-    tester.run(failure::isFailure, "Failed Result Creation");
+    tester.run(success::isSuccess);
+    tester.run(failure::isFailure);
   }
 
   boolean isSuccess();

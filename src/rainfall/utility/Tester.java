@@ -13,7 +13,7 @@ public class Tester {
     startTime   = currentMilliseconds();
   }
 
-  public void run(final BooleanSupplier test, final String identifier) {
+  public void run(final BooleanSupplier test) {
     runCount++;
 
     final var unitStartTime = currentMilliseconds();
@@ -24,8 +24,9 @@ public class Tester {
     if (result && duration <= maxAcceptableDuration) return;
 
     if (!result) failedCount++;
-    System.out.printf("[%s] %s (%.3f ms)%n", result ? "TOO LONG" : "FAILED",
-      identifier, duration);
+    final var caller = Thread.currentThread().getStackTrace()[2];
+    System.out.printf("[%s] %s:%d (%.3f ms)%n", result ? "TOO LONG" : "FAILED",
+      caller.getFileName(), caller.getLineNumber(), duration);
   }
 
   public boolean report() {
