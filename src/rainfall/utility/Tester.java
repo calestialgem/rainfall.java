@@ -1,4 +1,4 @@
-package rainfall;
+package rainfall.utility;
 
 import java.util.function.BooleanSupplier;
 
@@ -7,9 +7,13 @@ public class Tester {
   private int          runCount;
   private int          failedCount;
 
-  Tester() { runCount = 0; failedCount = 0; startTime = currentMilliseconds(); }
+  public Tester() {
+    runCount    = 0;
+    failedCount = 0;
+    startTime   = currentMilliseconds();
+  }
 
-  void run(final BooleanSupplier test, final String identifier) {
+  public void run(final BooleanSupplier test, final String identifier) {
     runCount++;
 
     final var unitStartTime = currentMilliseconds();
@@ -24,7 +28,7 @@ public class Tester {
       identifier, duration);
   }
 
-  boolean report() {
+  public boolean report() {
     final var totalDuration = elapsedMilliseconds(startTime);
 
     if (runCount == 0) System.out.printf("There are no tests!");

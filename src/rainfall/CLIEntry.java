@@ -1,5 +1,7 @@
 package rainfall;
 
+import rainfall.utility.Tester;
+
 record CLIEntry() {
   public static void main(final String[] arguments) {
     if (!test()) {
