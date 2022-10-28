@@ -32,8 +32,10 @@ public class Tester {
     final var totalDuration = elapsedMilliseconds(startTime);
 
     if (runCount == 0) System.out.printf("There are no tests!");
-    else if (failedCount == 0) System.out.printf("All tests passed.");
-    else System.out.printf("%i/%i of the tests failed!", failedCount, runCount);
+    else
+      if (failedCount == 0) System.out.printf("All %d tests passed.", runCount);
+      else
+        System.out.printf("%d/%d of the tests failed!", failedCount, runCount);
     System.out.printf(" (%.3f ms)%n", totalDuration);
 
     return failedCount == 0;
