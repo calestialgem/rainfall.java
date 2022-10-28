@@ -1,5 +1,10 @@
 package rainfall.utility;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+
 public sealed interface Result<Value, Error> {
   record Success<Value, Error>(Value value) implements Result<Value, Error> {
     @Override public boolean isSuccess() { return true; }
@@ -43,6 +48,33 @@ public sealed interface Result<Value, Error> {
     return new Failure<>(error);
   }
 
+  static <CombinedValue, CombinedError, Value, Error>
+    Result<CombinedValue, CombinedError>
+    combine(final Collection<Result<Value, Error>> results,
+      final Function<List<Value>, CombinedValue> valueCombiner,
+      final Function<List<Error>, CombinedError> errorCombiner) {
+    final var errors =
+      results.stream().filter(Result::isFailure).map(Result::error).toList();
+    if (!errors.isEmpty()) return Result.failure(errorCombiner.apply(errors));
+    return Result.success(
+      valueCombiner.apply(results.stream().map(Result::value).toList()));
+  }
+
+  default <TargetValue> Result<TargetValue, Error> propagate() {
+    return Result.failure(error());
+  }
+
+  default <TargetValue> Result<TargetValue, Error>
+    map(Function<Value, TargetValue> mapper) {
+    if (isFailure()) return propagate();
+    return success(mapper.apply(value()));
+  }
+
+  boolean isSuccess();
+  boolean isFailure();
+  Value value();
+  Error error();
+
   static void test(final Tester tester) {
     Success.test(tester);
     Failure.test(tester);
@@ -50,10 +82,50 @@ public sealed interface Result<Value, Error> {
     final var failure = failure(1);
     tester.run(success::isSuccess);
     tester.run(failure::isFailure);
-  }
 
-  boolean isSuccess();
-  boolean isFailure();
-  Value value();
-  Error error();
+    tester.run(() -> {
+      final BinaryOperator<Integer>          reducer  =
+        (left, right) -> left + right;
+      final Function<List<Integer>, Integer> combiner =
+        list -> list.stream().reduce(0, reducer);
+      final var                              results  =
+        List.<Result<Integer, Integer>>of(success(1), failure(1), success(1),
+          success(1));
+      final var                              combined =
+        combine(results, combiner, combiner);
+      return combined.isFailure() && combined.error() == 1;
+    });
+
+    tester.run(() -> {
+      final BinaryOperator<Integer>          reducer  =
+        (left, right) -> left + right;
+      final Function<List<Integer>, Integer> combiner =
+        list -> list.stream().reduce(0, reducer);
+      final var                              results  =
+        List.<Result<Integer, Integer>>of(success(1), success(1), success(1),
+          success(1));
+      final var                              combined =
+        combine(results, combiner, combiner);
+      return combined.isSuccess() && combined.value() == 4;
+    });
+
+    tester.run(() -> {
+      final Result<Integer, Integer> first  = failure(1);
+      final Result<String, Integer>  second = first.propagate();
+      return second.isFailure() && second.error().equals(first.error());
+    });
+
+    tester.run(() -> {
+      final Result<Integer, Integer> first  = failure(1);
+      final Result<String, Integer>  second = first.map(String::valueOf);
+      return second.isFailure() && second.error().equals(first.error());
+    });
+
+    tester.run(() -> {
+      final Result<Integer, Integer> first  = success(1);
+      final Result<String, Integer>  second = first.map(String::valueOf);
+      return second.isSuccess()
+        && second.value().equals(String.valueOf(first.value()));
+    });
+  }
 }

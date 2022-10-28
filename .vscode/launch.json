@@ -8,7 +8,7 @@
       "mainClass": "rainfall/rainfall.CLIEntry",
       "projectName": "rainfall.java_d749c69e",
       "cwd": "${workspaceFolder}",
-      "args": ["--directory", "res", "new", "testpackage"]
+      "args": ["--directory", "testspace", "new", "TestPackage"]
     }
   ]
 }
