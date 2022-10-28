@@ -11,7 +11,21 @@ record CLIEntry() {
    *
    * @param arguments Command-line arguments that were passed to the compiler.
    */
-  public static void main(String[] arguments) {
-    System.out.println("Hello, world!");
+  public static void main(final String[] arguments) {
+    if (!test()) {
+      System.err.println("Stopping the compiler because of the failed tests!");
+      return;
+    }
+  }
+
+  /**
+   * Tests the compiler.
+   *
+   * @return Whether all the tests passed.
+   */
+  private static boolean test() {
+    final var tester = new Tester();
+    tester.run(() -> true, "TesterInfrastructure");
+    return tester.report();
   }
 }
