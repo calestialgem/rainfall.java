@@ -6,7 +6,7 @@ public sealed interface Box<Held> {
     @Override public boolean isEmpty() { return false; }
     @Override public Held get() { return value; }
 
-    private static void test(Tester tester) {
+    private static void test(final Tester tester) {
       final var boxed = 1;
       final var box   = new Full<>(boxed);
       tester.run(box::isFull);
@@ -20,21 +20,21 @@ public sealed interface Box<Held> {
     @Override public boolean isEmpty() { return true; }
     @Override public Held get() { throw new RuntimeException("Box is empty!"); }
 
-    private static void test(Tester tester) {
+    private static void test(final Tester tester) {
       final var box = new Empty<>();
       tester.run(() -> !box.isFull());
       tester.run(box::isEmpty);
     }
   }
 
-  static <Held> Box<Held> full(Held value) { return new Full<>(value); }
+  static <Held> Box<Held> full(final Held value) { return new Full<>(value); }
   static <Held> Box<Held> empty() { return new Empty<>(); }
 
   boolean isFull();
   boolean isEmpty();
   Held get();
 
-  static void test(Tester tester) {
+  static void test(final Tester tester) {
     Full.test(tester);
     Empty.test(tester);
     final var full  = Box.full(1);

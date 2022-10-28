@@ -10,8 +10,9 @@ import rainfall.utility.Tester;
 public sealed interface Option {
   record Directory(Path workspace) implements Option {}
 
-  static Result<Void, String>
-    register(Map<Class<? extends Option>, Option> options, Option registered) {
+  static Result<Void, String> register(
+    final Map<Class<? extends Option>, Option> options,
+    final Option registered) {
     if (options.containsKey(registered.getClass()))
       return Result.failure("Option is already registered!");
 
@@ -19,7 +20,7 @@ public sealed interface Option {
     return Result.success(null);
   }
 
-  static void test(Tester tester) {
+  static void test(final Tester tester) {
     final var option  = new Directory(Path.of("."));
     final var options = new HashMap<Class<? extends Option>, Option>();
     tester.run(register(options, option)::isSuccess);

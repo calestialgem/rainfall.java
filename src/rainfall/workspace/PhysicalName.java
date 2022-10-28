@@ -22,25 +22,26 @@ public class PhysicalName {
     return Result.success(new PhysicalName(value));
   }
 
-  private static boolean isUppercase(byte checked) {
+  private static boolean isUppercase(final byte checked) {
     return inRange(checked, 'A', 'Z');
   }
 
-  private static boolean isLowercase(byte checked) {
+  private static boolean isLowercase(final byte checked) {
     return inRange(checked, 'a', 'z');
   }
 
-  private static boolean isDigit(byte checked) {
+  private static boolean isDigit(final byte checked) {
     return inRange(checked, '0', '9');
   }
 
-  private static boolean inRange(int checked, int first, int last) {
+  private static boolean inRange(final int checked, final int first,
+    final int last) {
     return checked >= first && checked <= last;
   }
 
   private PhysicalName(final String value) { this.value = value; }
 
-  public static void test(Tester tester) {
+  public static void test(final Tester tester) {
     tester.run(() -> !inRange(0, 1, 1));
     tester.run(() -> !inRange(2, 1, 1));
     tester.run(() -> inRange(1, 1, 1));
