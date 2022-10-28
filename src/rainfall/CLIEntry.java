@@ -1,5 +1,6 @@
 package rainfall;
 
+import rainfall.launcher.Option;
 import rainfall.utility.Box;
 import rainfall.utility.Result;
 import rainfall.utility.Tester;
@@ -18,6 +19,7 @@ record CLIEntry() {
     Box.test(tester);
     Result.test(tester);
     PhysicalName.test(tester);
+    Option.test(tester);
     return tester.report();
   }
 }

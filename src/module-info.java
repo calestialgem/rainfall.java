@@ -1,1 +1,1 @@
-module rainfall { exports rainfall.utility; }
+module rainfall { exports rainfall.utility; exports rainfall.launcher; }
