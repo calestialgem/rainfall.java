@@ -1,1 +1,1 @@
-module rainfall.cli {}
+module rainfall.cli { requires rainfall.core; }

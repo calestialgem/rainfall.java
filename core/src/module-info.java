@@ -1,1 +1,1 @@
-module rainfall.core {}
+module rainfall.core { exports rainfall.core; }
