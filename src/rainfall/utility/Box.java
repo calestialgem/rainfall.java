@@ -1,5 +1,10 @@
 package rainfall.utility;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 /**
  * Container that can at most have one element in it.
  *
@@ -84,6 +89,51 @@ public sealed interface Box<Held> {
    * @return        New empty box.
    */
   static <Held> Box<Held> empty() { return new Empty<>(); }
+
+  /**
+   * Combines multiple boxed values to a single boxed value.
+   *
+   * @param  <Combined> Type that is the result of combining the values.
+   * @param  <Held>     Type that is held in the full boxes.
+   * @param  boxes      Combined boxes.
+   * @param  combiner   Function that combines values.
+   * @return            Combined values, or nothing.
+   */
+  static <Combined, Held> Box<Combined> combine(
+    final Collection<Box<Held>> boxes,
+    final Function<List<Held>, Combined> combiner) {
+    final var held = boxes.stream().filter(Box::isFull).map(Box::get).toList();
+    if (held.isEmpty()) return Box.empty();
+    return Box.full(combiner.apply(held));
+  }
+
+  /**
+   * Creates a box, which is full depending on a condition.
+   *
+   * @param  <Held>     The type that could be held in the created box.
+   * @param  shouldFill Whether the box should be filled.
+   * @param  filler     Function that supplies an object that will fill the box.
+   * @return            Box filled with a value from the filler if the condition
+   *                      is true, or nothing.
+   */
+  static <Held> Box<Held> fillIf(boolean shouldFill, Supplier<Held> filler) {
+    return shouldFill ? Box.full(filler.get()) : Box.empty();
+  }
+
+  /**
+   * Inserts a box, which is full depending on a condition, in to the list.
+   *
+   * @param  <Held>     The type that could be held in the created box.
+   * @param  shouldFill Whether the box should be filled.
+   * @param  boxes      List that the box is inserted to.
+   * @param  filler     Function that supplies an object that will fill the box.
+   * @return            Whether the box was filled.
+   */
+  static <Held> boolean fillIf(boolean shouldFill, List<Box<Held>> boxes,
+    Supplier<Held> filler) {
+    boxes.add(fillIf(shouldFill, filler));
+    return shouldFill;
+  }
 
   /**
    * @return Whether there is a value.

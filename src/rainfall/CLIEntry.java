@@ -11,6 +11,7 @@ import rainfall.launcher.Command;
 import rainfall.launcher.Launcher;
 import rainfall.launcher.Option;
 import rainfall.utility.Box;
+import rainfall.utility.Message;
 import rainfall.utility.Result;
 import rainfall.utility.Tester;
 import rainfall.workspace.PhysicalName;
@@ -46,7 +47,9 @@ class CLIEntry {
     // Stop if it fails to parse the arguments.
     final var launcher = new CLIEntry(List.of(arguments)).parse();
     if (launcher.isFailure()) {
-      System.err.println(launcher.error());
+      Message.error(
+        "Not launching the compiler because failed to parse the command-line arguments!",
+        launcher.error()).report();
       return;
     }
   }
@@ -78,7 +81,7 @@ class CLIEntry {
    *
    * @return Parsed launcher, or error message.
    */
-  private Result<Launcher, String> parse() {
+  private Result<Launcher, Message> parse() {
     // Initialize the mutable state.
     current = 0;
 
@@ -108,7 +111,7 @@ class CLIEntry {
    * @return Parsed option, nothing, or the error message that was generated
    *           while parsing an option.
    */
-  private Result<Box<Option>, String> parseOption() {
+  private Result<Box<Option>, Message> parseOption() {
     // If there is nothing, pass.
     if (!has()) return Result.success(Box.empty());
     final var option = advance();
@@ -118,7 +121,7 @@ class CLIEntry {
       final var shortcut = option.charAt(1);
       return switch (shortcut) {
       case 'd' -> parseDirectory(option).map(Box::full);
-      default -> Result.failure("""
+      default -> Message.failure("""
         Unknown option shortcut `%s`! Use:
          - directory (d): sets workspace directory""".formatted(shortcut));
       };
@@ -129,7 +132,7 @@ class CLIEntry {
       final var name = option.substring(2);
       return switch (name) {
       case "directory" -> parseDirectory(option).map(Box::full);
-      default -> Result.failure("""
+      default -> Message.failure("""
         Unknown option name `%s`! Use:
          - directory (d): sets workspace directory""".formatted(name));
       };
@@ -147,9 +150,9 @@ class CLIEntry {
    *                  reporting in the error message.
    * @return        Parsed directory option, or error message.
    */
-  private Result<Option, String> parseDirectory(final String option) {
+  private Result<Option, Message> parseDirectory(final String option) {
     // Check whether the path to the workspace directory exists.
-    if (!has()) return Result
+    if (!has()) return Message
       .failure("Expected workspace directory argument after the `%s` option!"
         .formatted(option));
     final var argument = advance();
@@ -158,7 +161,8 @@ class CLIEntry {
     try {
       return Result.success(new Option.Directory(Path.of(argument)));
     } catch (InvalidPathException exception) {
-      return Result.failure(exception.getLocalizedMessage());
+      return Message.failure("Workspace directory argument is not a path!",
+        Message.error(exception));
     }
   }
 
@@ -167,9 +171,9 @@ class CLIEntry {
    *
    * @return Parsed command, or error message.
    */
-  private Result<Command, String> parseCommand() {
+  private Result<Command, Message> parseCommand() {
     // Check whether a command is given.
-    if (!has()) return Result.failure("""
+    if (!has()) return Message.failure("""
       There is no command given! Use:
        - new   (n): creates a package
        - check (c): checks packages
@@ -185,7 +189,7 @@ class CLIEntry {
     case "test", "t" -> parseTest(command);
     case "build", "b" -> parseBuild(command);
     case "run", "r" -> parseRun(command);
-    default -> Result.<Command, String>failure("""
+    default -> Message.<Command>failure("""
       Could not recognize the given command `%s`! Use:
        - new   (n): creates a package
        - check (c): checks packages
@@ -195,9 +199,9 @@ class CLIEntry {
     };
 
     // Check whether all the arguments are consumed.
-    if (parsedCommand.isSuccess() && has()) return Result.failure(
-      "Unexpected arguments after `%s` command!%n%s".formatted(command, String
-        .join(System.lineSeparator(), advanceToEnd().toArray(String[]::new))));
+    if (parsedCommand.isSuccess() && has()) return Message.failure(
+      "Unexpected arguments after `%s` command!".formatted(command),
+      advanceToEnd().stream().map(Message::error).toList());
 
     return parsedCommand;
   }
@@ -209,9 +213,9 @@ class CLIEntry {
    *                   reporting in the error message.
    * @return         Parsed new command, or error message.
    */
-  private Result<Command, String> parseNew(final String command) {
+  private Result<Command, Message> parseNew(final String command) {
     // Check whether a name for the created package is given.
-    if (!has()) return Result.failure(
+    if (!has()) return Message.failure(
       "Expected a name for the package that will be created for `%s` command!"
         .formatted(command));
     return PhysicalName.of(advance()).map(Command.New::new);
@@ -224,7 +228,7 @@ class CLIEntry {
    *                   reporting in the error message.
    * @return         Parsed check command, or error message.
    */
-  private Result<Command, String> parseCheck(final String command) {
+  private Result<Command, Message> parseCheck(final String command) {
     return parseNames(command).map(Command.Check::new);
   }
 
@@ -235,7 +239,7 @@ class CLIEntry {
    *                   reporting in the error message.
    * @return         Parsed test command, or error message.
    */
-  private Result<Command, String> parseTest(final String command) {
+  private Result<Command, Message> parseTest(final String command) {
     return parseNames(command).map(Command.Test::new);
   }
 
@@ -246,9 +250,9 @@ class CLIEntry {
    *                   reporting in the error message.
    * @return         Parsed build command, or error message.
    */
-  private Result<Command, String> parseBuild(final String command) {
+  private Result<Command, Message> parseBuild(final String command) {
     // Check whether a package is given to be built.
-    if (!has()) return Result.failure(
+    if (!has()) return Message.failure(
       "Expected a name for the package that will be build for `%s` command!"
         .formatted(command));
     return PhysicalName.of(advance()).map(Command.Build::new);
@@ -261,9 +265,9 @@ class CLIEntry {
    *                   reporting in the error message.
    * @return         Parsed run command, or error message.
    */
-  private Result<Command, String> parseRun(final String command) {
+  private Result<Command, Message> parseRun(final String command) {
     // Check whether a package is given to be run.
-    if (!has()) return Result.failure(
+    if (!has()) return Message.failure(
       "Expected a name for the package that will be run for `%s` command!"
         .formatted(command));
     // Pass all the remaining arguments to the command.
@@ -279,20 +283,21 @@ class CLIEntry {
    *                   error message.
    * @return         Parsed package names, or error message.
    */
-  private Result<List<PhysicalName>, String> parseNames(final String command) {
+  private Result<List<PhysicalName>, Message> parseNames(final String command) {
     // Check whether all the remaining arguments are unique.
     final var arguments       = advanceToEnd();
     final var uniqueArguments = arguments.stream().collect(Collectors.toSet());
-    if (uniqueArguments.size() < arguments.size()) return Result
+    if (uniqueArguments.size() < arguments.size()) return Message
       .failure("Repeated names are given to `%s` command!".formatted(command));
 
     // Try to parse names, and combine them to a list if all are valid.
     // Concatenate error messages if there are any invalid ones.
-    return Result.combine(
-      uniqueArguments.stream().map(PhysicalName::of).toList(),
-      Function.identity(),
-      errors -> "Invalid names are given to `%s` command".formatted(command,
-        String.join(System.lineSeparator(), errors.toArray(String[]::new))));
+    return Result
+      .combine(uniqueArguments.stream().map(PhysicalName::of).toList(),
+        Function.identity(),
+        errors -> Message.error(
+          "Invalid names are given to `%s` command!".formatted(command),
+          errors));
   }
 
   /**

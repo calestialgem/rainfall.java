@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
+import rainfall.utility.Message;
 import rainfall.utility.Result;
 import rainfall.utility.Tester;
 
@@ -29,12 +30,12 @@ public sealed interface Option {
    * @param  registered Option that will be added to the map.
    * @return            Success, or error message.
    */
-  static Result<Void, String> register(
+  static Result<Void, Message> register(
     final Map<Class<? extends Option>, Option> options,
     final Option registered) {
     // Check whether an option with the same type exists.
     if (options.containsKey(registered.getClass()))
-      return Result.failure("Option is already registered!");
+      return Message.failure("Option is already registered!");
 
     // Put and return success.
     options.put(registered.getClass(), registered);

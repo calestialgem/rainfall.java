@@ -1,5 +1,8 @@
 package rainfall.workspace;
 
+import java.util.ArrayList;
+
+import rainfall.utility.Message;
 import rainfall.utility.Result;
 import rainfall.utility.Tester;
 
@@ -20,21 +23,31 @@ public class PhysicalName {
    * @param  value String that is converted.
    * @return       Converted name, or error message.
    */
-  public static Result<PhysicalName, String> of(final String value) {
+  public static Result<PhysicalName, Message> of(final String value) {
     // Check whether there are any characters.
-    if (value.isEmpty()) return Result.failure("Name cannot be empty!");
+    if (value.isEmpty()) return Message.failure("Name cannot be empty!");
 
     final var contents = value.getBytes();
 
+    // For combining multiple errors.
+    final var errors = new ArrayList<Message>();
+
     // Check the initial character.
-    if (!isUppercase(contents[0])) return Result
-      .failure("Name must start with an uppercase English letter!");
+    if (!isUppercase(contents[0])) errors
+      .add(Message.error("Name must start with an uppercase English letter!"));
 
     // Check rest of the characters.
-    for (var character : contents) if (!isUppercase(character)
-      && !isLowercase(character) && !isDigit(character))
-      return Result.failure(
-        "Name must solely consist of English letters and decimal digits!");
+    for (var character : contents) {
+      if (!isUppercase(character) && !isLowercase(character)
+        && !isDigit(character)) {
+        errors.add(Message.error(
+          "Name must solely consist of English letters and decimal digits!"));
+        break;
+      }
+    }
+
+    // Group the errors and report them.
+    if (!errors.isEmpty()) return Result.failure(Message.group(errors));
 
     return Result.success(new PhysicalName(value));
   }
