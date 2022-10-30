@@ -1,5 +1,7 @@
 package rainfall;
 
+import rainfall.utility.Box;
+import rainfall.utility.Result;
 import rainfall.utility.UnitTestRunner;
 
 class CLIEntry {
@@ -14,6 +16,8 @@ class CLIEntry {
 
   private static boolean testAndReport() {
     var runner = new UnitTestRunner();
+    Box.test(runner);
+    Result.test(runner);
     return runner.report();
   }
 }
