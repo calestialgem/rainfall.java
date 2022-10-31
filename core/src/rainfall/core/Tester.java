@@ -19,6 +19,7 @@ public final class Tester {
       System.out.printf("[REPEATED] %s%n", testInformation(runTest));
       return;
     }
+    runTestClasses.add(runTest.getClass());
 
     final var runTestStartMilliseconds = currentMilliseconds();
     final var runTestOutcome           = runTest.outcome();
