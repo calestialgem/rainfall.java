@@ -16,10 +16,10 @@ public sealed interface Result<Value, Error> {
     }
   }
 
-  static <Value, Error> Result<Value, Error> success(Value value) {
+  static <Value, Error> Result<Value, Error> success(final Value value) {
     return new Success<>(value);
   }
-  static <Value, Error> Result<Value, Error> failure(Error error) {
+  static <Value, Error> Result<Value, Error> failure(final Error error) {
     return new Failure<>(error);
   }
 
@@ -28,45 +28,26 @@ public sealed interface Result<Value, Error> {
   Value value();
   Error error();
 
-  public static void test(final Tester tester) {
-    class SuccessIsSuccess implements Test {
-      @Override public boolean outcome() {
-        return new Success<>(1).isSuccess();
-      }
+  final class TestSuite {
+    public static boolean successIsSuccess() {
+      return new Success<>(1).isSuccess();
     }
-    class SuccessIsNotFailure implements Test {
-      @Override public boolean outcome() {
-        return !new Success<>(1).isFailure();
-      }
+    public static boolean successIsNotFailure() {
+      return !new Success<>(1).isFailure();
     }
-    class FailureIsNotSuccess implements Test {
-      @Override public boolean outcome() {
-        return !new Failure<>(1).isSuccess();
-      }
+    public static boolean failureIsNotSuccess() {
+      return !new Failure<>(1).isSuccess();
     }
-    class FailureIsFailure implements Test {
-      @Override public boolean outcome() {
-        return new Failure<>(1).isFailure();
-      }
+    public static boolean failureIsFailure() {
+      return new Failure<>(1).isFailure();
     }
-    class CreatedSuccessHasTheGivenValue implements Test {
-      @Override public boolean outcome() {
-        final var value = 1;
-        return success(value).value().equals(value);
-      }
+    public static boolean createdSuccessHasTheGivenValue() {
+      final var value = 1;
+      return success(value).value().equals(value);
     }
-    class CreatedFailureHasTheGivenError implements Test {
-      @Override public boolean outcome() {
-        final var error = 1;
-        return failure(error).error().equals(error);
-      }
+    public static boolean createdFailureHasTheGivenError() {
+      final var error = 1;
+      return failure(error).error().equals(error);
     }
-
-    tester.run(new SuccessIsSuccess());
-    tester.run(new SuccessIsNotFailure());
-    tester.run(new FailureIsNotSuccess());
-    tester.run(new FailureIsFailure());
-    tester.run(new CreatedSuccessHasTheGivenValue());
-    tester.run(new CreatedFailureHasTheGivenError());
   }
 }

@@ -1,5 +1,7 @@
 package rainfall;
 
+import java.lang.reflect.InvocationTargetException;
+
 import rainfall.core.Box;
 import rainfall.core.Result;
 import rainfall.core.Tester;
@@ -15,8 +17,13 @@ class CommandLineInterface {
 
   private static boolean testEverythingAndReport() {
     final var tester = new Tester();
-    Box.test(tester);
-    Result.test(tester);
+    try {
+      tester.run(Box.TestSuite.class);
+      tester.run(Result.TestSuite.class);
+    } catch (IllegalAccessException | InvocationTargetException e) {
+      e.printStackTrace();
+      return false;
+    }
     return tester.report();
   }
 }

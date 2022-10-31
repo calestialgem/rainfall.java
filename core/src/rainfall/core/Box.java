@@ -13,41 +13,24 @@ public sealed interface Box<Value> {
     }
   }
 
-  static <Value> Box<Value> full(Value value) { return new Full<>(value); }
+  static <Value> Box<Value> full(final Value value) {
+    return new Full<>(value);
+  }
   static <Value> Box<Value> empty() { return new Empty<>(); }
 
   boolean isFull();
   boolean isEmpty();
   Value value();
 
-  public static void test(final Tester tester) {
-    class FullIsFull implements Test {
-      @Override public boolean outcome() { return new Full<>(1).isFull(); }
+  final class TestSuite {
+    public static boolean fullIsFull() { return new Full<>(1).isFull(); }
+    public static boolean fullIsNotEmpty() { return !new Full<>(1).isEmpty(); }
+    public static boolean emptyIsNotFull() { return !new Empty<>().isFull(); }
+    public static boolean emptyIsEmpty() { return new Empty<>().isEmpty(); }
+    public static boolean createdFullHasTheGivenValue() {
+      final var value = 1;
+      return full(value).value().equals(value);
     }
-    class FullIsNotEmpty implements Test {
-      @Override public boolean outcome() { return !new Full<>(1).isEmpty(); }
-    }
-    class EmptyIsNotFull implements Test {
-      @Override public boolean outcome() { return !new Empty<>().isFull(); }
-    }
-    class EmptyIsEmpty implements Test {
-      @Override public boolean outcome() { return new Empty<>().isEmpty(); }
-    }
-    class CreatedFullHasTheGivenValue implements Test {
-      @Override public boolean outcome() {
-        final var value = 1;
-        return full(value).value().equals(value);
-      }
-    }
-    class CreatedEmptyIsEmpty implements Test {
-      @Override public boolean outcome() { return empty().isEmpty(); }
-    }
-
-    tester.run(new FullIsFull());
-    tester.run(new FullIsNotEmpty());
-    tester.run(new EmptyIsNotFull());
-    tester.run(new EmptyIsEmpty());
-    tester.run(new CreatedFullHasTheGivenValue());
-    tester.run(new CreatedEmptyIsEmpty());
+    public static boolean createdEmptyIsEmpty() { return empty().isEmpty(); }
   }
 }
