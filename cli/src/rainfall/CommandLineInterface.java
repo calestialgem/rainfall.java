@@ -1,5 +1,7 @@
 package rainfall;
 
+import rainfall.core.Box;
+import rainfall.core.Result;
 import rainfall.core.Tester;
 
 class CommandLineInterface {
@@ -13,6 +15,8 @@ class CommandLineInterface {
 
   private static boolean testEverythingAndReport() {
     final var tester = new Tester();
+    Box.test(tester);
+    Result.test(tester);
     return tester.report();
   }
 }
