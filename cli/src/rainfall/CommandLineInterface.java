@@ -3,6 +3,7 @@ package rainfall;
 import java.lang.reflect.InvocationTargetException;
 
 import rainfall.core.Box;
+import rainfall.core.Buffer;
 import rainfall.core.Result;
 import rainfall.core.Tester;
 
@@ -20,6 +21,7 @@ class CommandLineInterface {
     try {
       tester.run(Box.TestSuite.class);
       tester.run(Result.TestSuite.class);
+      tester.run(Buffer.TestSuite.class);
     } catch (IllegalAccessException | InvocationTargetException e) {
       e.printStackTrace();
       return false;
