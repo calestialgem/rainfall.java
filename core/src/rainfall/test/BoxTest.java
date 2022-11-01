@@ -1,9 +1,10 @@
 package rainfall.test;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 import rainfall.Box;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 final class BoxTest {
   @Test void emptyBoxIsEmpty() { assertTrue(Box.empty().isEmpty()); }
