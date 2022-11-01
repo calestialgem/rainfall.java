@@ -7,7 +7,7 @@ public final class PhysicalName {
   public static Result<PhysicalName, Message> of(final String value) {
     final var asASCII = value.getBytes();
     if (asASCII.length == 0) {
-      return Result.failure(Message.error("Name cannot be empty!"));
+      return Message.failure("Name cannot be empty!");
     }
     if (!isUppercase(asASCII[0])) {
       return Result.failure(
@@ -15,8 +15,8 @@ public final class PhysicalName {
     }
     for (final var character : asASCII) {
       if (!isValid(character)) {
-        return Result.failure(Message.error(
-          "Name must solely consist of English letters and decimal digits!"));
+        return Message.failure(
+          "Name must solely consist of English letters and decimal digits!");
       }
     }
     return Result.success(new PhysicalName(value));
