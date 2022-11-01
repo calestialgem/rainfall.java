@@ -1,6 +1,10 @@
 package rainfall;
 
 public sealed abstract class Message {
+  public static <Value> Result<Value, Message> failure(final String body,
+    final Message... causes) {
+    return Result.failure(error(body, causes));
+  }
   public static Message error(final String body, final Message... causes) {
     return new Single("error", body, causes);
   }

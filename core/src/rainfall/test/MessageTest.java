@@ -7,6 +7,33 @@ import rainfall.Message;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MessageTest {
+  @Test void failureIsResult() { assertTrue(Message.failure("").isFailure()); }
+  @Test void failureIsError() {
+    assertEquals("error: ", Message.failure("").error().toString());
+  }
+  @Test void failureShowsBody() {
+    assertEquals("error: body", Message.failure("body").error().toString());
+  }
+  @Test void failureShowsCause() {
+    assertEquals("error: body Due to:%n  error: cause".formatted(),
+      Message.failure("body", Message.error("cause")).error().toString());
+  }
+  @Test void failureListsCauses() {
+    assertEquals(
+      "error: body Due to:%n  error: cause1%n  error: cause2".formatted(),
+      Message.failure("body", Message.error("cause1"), Message.error("cause2"))
+        .error().toString());
+  }
+  @Test void failureIndentsNestedCauses() {
+    assertEquals(
+      "error: body Due to:%n  error: cause Due to:%n    error: cause of cause"
+        .formatted(),
+      Message
+        .failure("body",
+          Message.error("cause", Message.error("cause of cause")))
+        .error().toString());
+  }
+
   @Test void errorMessageHasCorrectTitle() {
     assertEquals("error: ", Message.error("").toString());
   }
