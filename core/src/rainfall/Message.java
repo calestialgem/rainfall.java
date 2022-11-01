@@ -10,7 +10,6 @@ public sealed abstract class Message {
   public static Message info(final String body, final Message... causes) {
     return new Single("info", body, causes);
   }
-
   public static Message group() {
     throw new IllegalArgumentException("There are no messages to group!");
   }
@@ -20,7 +19,6 @@ public sealed abstract class Message {
   }
 
   @Override public String toString() { return toString(0); }
-
   protected abstract String toString(int indentationLevel);
 
   private static final class Single extends Message {

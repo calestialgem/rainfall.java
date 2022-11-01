@@ -12,6 +12,7 @@ final class BoxTest {
   @Test void emptyBoxDoesNotHaveAValue() {
     assertThrows(UnsupportedOperationException.class, Box.empty()::value);
   }
+
   @Test void fullBoxIsNotEmpty() { assertFalse(Box.full(1).isEmpty()); }
   @Test void fullBoxIsFull() { assertTrue(Box.full(1).isFull()); }
   @Test void fullBoxHasTheGivenValue() {

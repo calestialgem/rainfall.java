@@ -20,6 +20,7 @@ class ResultTest {
   @Test void failureResultDoesNotHaveAValue() {
     assertThrows(UnsupportedOperationException.class, Result.failure(1)::value);
   }
+
   @Test void successResultIsNotFailure() {
     assertFalse(Result.success(1).isFailure());
   }
