@@ -1,11 +1,11 @@
 package rainfall.test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
 import rainfall.Command;
 import rainfall.PhysicalName;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 final class CommandTest {
   @Test void newHasName() {

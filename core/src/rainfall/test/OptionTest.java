@@ -1,15 +1,16 @@
 package rainfall.test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.nio.file.Path;
+
 import org.junit.jupiter.api.Test;
 
 import rainfall.Option;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.nio.file.Path;
-
 final class OptionTest {
   @Test void directoryHasPath() {
-    assertEquals(Path.of("."), Option.directory(Path.of(".")).path());
+    var path = Path.of(".");
+    assertEquals(path, Option.directory(path).path());
   }
 }

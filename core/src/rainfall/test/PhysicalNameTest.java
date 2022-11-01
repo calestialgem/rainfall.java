@@ -1,10 +1,11 @@
 package rainfall.test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 
 import rainfall.PhysicalName;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 final class PhysicalNameTest {
   @Test void deniesEmptyValue() {
@@ -46,6 +47,7 @@ final class PhysicalNameTest {
   }
 
   @Test void acceptedHasValue() {
-    assertEquals("A", PhysicalName.of("A").value().value());
+    var value = "A";
+    assertEquals(value, PhysicalName.of(value).value().value());
   }
 }
