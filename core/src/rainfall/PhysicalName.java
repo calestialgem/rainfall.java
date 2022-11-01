@@ -24,17 +24,17 @@ public final class PhysicalName {
 
   public String value() { return value; }
 
-  private static boolean isValid(byte character) {
+  private static boolean isValid(final byte character) {
     return isUppercase(character) || isLowercase(character)
       || isDigit(character);
   }
-  private static boolean isUppercase(byte character) {
+  private static boolean isUppercase(final byte character) {
     return character >= 'A' && character <= 'Z';
   }
-  private static boolean isLowercase(byte character) {
+  private static boolean isLowercase(final byte character) {
     return character >= 'a' && character <= 'z';
   }
-  private static boolean isDigit(byte character) {
+  private static boolean isDigit(final byte character) {
     return character >= '0' && character <= '9';
   }
 }
