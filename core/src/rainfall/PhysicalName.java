@@ -10,8 +10,8 @@ public final class PhysicalName {
       return Message.failure("Name cannot be empty!");
     }
     if (!isUppercase(asASCII[0])) {
-      return Result.failure(
-        Message.error("Name must start with an uppercase English letter!"));
+      return Message
+        .failure("Name must start with an uppercase English letter!");
     }
     for (var character : asASCII) {
       if (!isValid(character)) {
