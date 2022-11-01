@@ -34,23 +34,23 @@ class MessageTest {
         .error().toString());
   }
 
-  @Test void errorMessageHasCorrectTitle() {
+  @Test void errorShowsCorrectTitle() {
     assertEquals("error: ", Message.error("").toString());
   }
-  @Test void errorMessageHasGivenBody() {
+  @Test void errorShowsBody() {
     assertEquals("error: body", Message.error("body").toString());
   }
-  @Test void errorMessageHasGivenCause() {
+  @Test void errorShowsCause() {
     assertEquals("error: body Due to:%n  error: cause".formatted(),
       Message.error("body", Message.error("cause")).toString());
   }
-  @Test void errorMessageHasGivenCauses() {
+  @Test void errorListsCauses() {
     assertEquals(
       "error: body Due to:%n  error: cause1%n  error: cause2".formatted(),
       Message.error("body", Message.error("cause1"), Message.error("cause2"))
         .toString());
   }
-  @Test void errorMessageHasIndentedNestedCauses() {
+  @Test void errorIndentsNestedCauses() {
     assertEquals(
       "error: body Due to:%n  error: cause Due to:%n    error: cause of cause"
         .formatted(),
@@ -59,24 +59,24 @@ class MessageTest {
         .toString());
   }
 
-  @Test void warningMessageHasCorrectTitle() {
+  @Test void warningShowsCorrectTitle() {
     assertEquals("warning: ", Message.warning("").toString());
   }
-  @Test void warningMessageHasGivenBody() {
+  @Test void warningShowsBody() {
     assertEquals("warning: body", Message.warning("body").toString());
   }
-  @Test void warningMessageHasGivenCause() {
+  @Test void warningShowsCause() {
     assertEquals("warning: body Due to:%n  warning: cause".formatted(),
       Message.warning("body", Message.warning("cause")).toString());
   }
-  @Test void warningMessageHasGivenCauses() {
+  @Test void warningListsCauses() {
     assertEquals(
       "warning: body Due to:%n  warning: cause1%n  warning: cause2".formatted(),
       Message
         .warning("body", Message.warning("cause1"), Message.warning("cause2"))
         .toString());
   }
-  @Test void warningMessageHasIndentedNestedCauses() {
+  @Test void warningIndentsNestedCauses() {
     assertEquals(
       "warning: body Due to:%n  warning: cause Due to:%n    warning: cause of cause"
         .formatted(),
@@ -86,23 +86,23 @@ class MessageTest {
         .toString());
   }
 
-  @Test void infoMessageHasCorrectTitle() {
+  @Test void infoShowsCorrectTitle() {
     assertEquals("info: ", Message.info("").toString());
   }
-  @Test void infoMessageHasGivenBody() {
+  @Test void infoShowsBody() {
     assertEquals("info: body", Message.info("body").toString());
   }
-  @Test void infoMessageHasGivenCause() {
+  @Test void infoShowsCause() {
     assertEquals("info: body Due to:%n  info: cause".formatted(),
       Message.info("body", Message.info("cause")).toString());
   }
-  @Test void infoMessageHasGivenCauses() {
+  @Test void infoListsCauses() {
     assertEquals(
       "info: body Due to:%n  info: cause1%n  info: cause2".formatted(),
       Message.info("body", Message.info("cause1"), Message.info("cause2"))
         .toString());
   }
-  @Test void infoMessageHasIndentedNestedCauses() {
+  @Test void infoIndentsNestedCauses() {
     assertEquals(
       "info: body Due to:%n  info: cause Due to:%n    info: cause of cause"
         .formatted(),
@@ -111,18 +111,18 @@ class MessageTest {
         .toString());
   }
 
-  @Test void cannotGroupNoMessages() {
+  @Test void groupMustHaveMembers() {
     assertThrows(IllegalArgumentException.class, () -> Message.group());
   }
-  @Test void messageGroupHasGivenMessage() {
+  @Test void groupShowsMember() {
     assertEquals("error: body",
       Message.group(Message.error("body")).toString());
   }
-  @Test void messageGroupHasGivenMessages() {
+  @Test void groupListsMembers() {
     assertEquals("error: body1%nwarning: body2".formatted(), Message
       .group(Message.error("body1"), Message.warning("body2")).toString());
   }
-  @Test void messageGroupHasIndentedNestedCauses() {
+  @Test void groupIndentsMemberCauses() {
     assertEquals("error: body1 Due to:%n  warning: body2".formatted(), Message
       .group(Message.error("body1", Message.warning("body2"))).toString());
   }
