@@ -7,19 +7,25 @@ import rainfall.PhysicalName;
 import static org.junit.jupiter.api.Assertions.*;
 
 final class PhysicalNameTest {
-  @Test void deniesEmptyValue() { assertTrue(PhysicalName.of("").isFailure()); }
+  @Test void deniesEmptyValue() {
+    assertEquals("error: Name cannot be empty!",
+      PhysicalName.of("").error().toString());
+  }
 
   @Test void deniesLowercaseInitial() {
-    assertTrue(PhysicalName.of("a").isFailure());
+    assertEquals("error: Name must start with an uppercase English letter!",
+      PhysicalName.of("a").error().toString());
   }
   @Test void deniesDigitInitial() {
-    assertTrue(PhysicalName.of("0").isFailure());
+    assertEquals("error: Name must start with an uppercase English letter!",
+      PhysicalName.of("0").error().toString());
   }
   @Test void acceptsUppercaseInitial() {
     assertTrue(PhysicalName.of("A").isSuccess());
   }
   @Test void deniesInvalidInitial() {
-    assertTrue(PhysicalName.of("_").isFailure());
+    assertEquals("error: Name must start with an uppercase English letter!",
+      PhysicalName.of("_").error().toString());
   }
 
   @Test void acceptsLowercaseBody() {
@@ -32,7 +38,9 @@ final class PhysicalNameTest {
     assertTrue(PhysicalName.of("AA").isSuccess());
   }
   @Test void deniesInvalidBody() {
-    assertTrue(PhysicalName.of("A_").isFailure());
+    assertEquals(
+      "error: Name must solely consist of English letters and decimal digits!",
+      PhysicalName.of("A_").error().toString());
   }
 
   @Test void acceptedHasValue() {
