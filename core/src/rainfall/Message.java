@@ -65,9 +65,9 @@ public sealed abstract class Message {
   }
 
   private static void indent(int indentationLevel, StringBuilder builder) {
-    builder.append(System.lineSeparator());
+    builder.append('\n');
     for (var level = 0; level < indentationLevel; level++) {
-      builder.append("  ");
+      builder.append(' ').append(' ');
     }
   }
 }

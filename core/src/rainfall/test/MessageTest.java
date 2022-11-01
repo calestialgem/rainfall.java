@@ -15,23 +15,26 @@ final class MessageTest {
     assertEquals("error: body", Message.failure("body").error().toString());
   }
   @Test void failureShowsCause() {
-    assertEquals("error: body Due to:%n  error: cause".formatted(),
+    assertEquals("""
+      error: body Due to:
+        error: cause""",
       Message.failure("body", Message.error("cause")).error().toString());
   }
   @Test void failureListsCauses() {
-    assertEquals(
-      "error: body Due to:%n  error: cause1%n  error: cause2".formatted(),
+    assertEquals("""
+      error: body Due to:
+        error: cause1
+        error: cause2""",
       Message.failure("body", Message.error("cause1"), Message.error("cause2"))
         .error().toString());
   }
   @Test void failureIndentsNestedCauses() {
-    assertEquals(
-      "error: body Due to:%n  error: cause Due to:%n    error: cause of cause"
-        .formatted(),
-      Message
-        .failure("body",
-          Message.error("cause", Message.error("cause of cause")))
-        .error().toString());
+    assertEquals("""
+      error: body Due to:
+        error: cause Due to:
+          error: cause of cause""", Message
+      .failure("body", Message.error("cause", Message.error("cause of cause")))
+      .error().toString());
   }
 
   @Test void errorShowsCorrectTitle() {
@@ -41,19 +44,24 @@ final class MessageTest {
     assertEquals("error: body", Message.error("body").toString());
   }
   @Test void errorShowsCause() {
-    assertEquals("error: body Due to:%n  error: cause".formatted(),
+    assertEquals("""
+      error: body Due to:
+        error: cause""",
       Message.error("body", Message.error("cause")).toString());
   }
   @Test void errorListsCauses() {
-    assertEquals(
-      "error: body Due to:%n  error: cause1%n  error: cause2".formatted(),
+    assertEquals("""
+      error: body Due to:
+        error: cause1
+        error: cause2""",
       Message.error("body", Message.error("cause1"), Message.error("cause2"))
         .toString());
   }
   @Test void errorIndentsNestedCauses() {
-    assertEquals(
-      "error: body Due to:%n  error: cause Due to:%n    error: cause of cause"
-        .formatted(),
+    assertEquals("""
+      error: body Due to:
+        error: cause Due to:
+          error: cause of cause""",
       Message
         .error("body", Message.error("cause", Message.error("cause of cause")))
         .toString());
@@ -66,20 +74,25 @@ final class MessageTest {
     assertEquals("warning: body", Message.warning("body").toString());
   }
   @Test void warningShowsCause() {
-    assertEquals("warning: body Due to:%n  warning: cause".formatted(),
+    assertEquals("""
+      warning: body Due to:
+        warning: cause""",
       Message.warning("body", Message.warning("cause")).toString());
   }
   @Test void warningListsCauses() {
-    assertEquals(
-      "warning: body Due to:%n  warning: cause1%n  warning: cause2".formatted(),
+    assertEquals("""
+      warning: body Due to:
+        warning: cause1
+        warning: cause2""",
       Message
         .warning("body", Message.warning("cause1"), Message.warning("cause2"))
         .toString());
   }
   @Test void warningIndentsNestedCauses() {
-    assertEquals(
-      "warning: body Due to:%n  warning: cause Due to:%n    warning: cause of cause"
-        .formatted(),
+    assertEquals("""
+      warning: body Due to:
+        warning: cause Due to:
+          warning: cause of cause""",
       Message
         .warning("body",
           Message.warning("cause", Message.warning("cause of cause")))
@@ -93,19 +106,22 @@ final class MessageTest {
     assertEquals("info: body", Message.info("body").toString());
   }
   @Test void infoShowsCause() {
-    assertEquals("info: body Due to:%n  info: cause".formatted(),
-      Message.info("body", Message.info("cause")).toString());
+    assertEquals("""
+      info: body Due to:
+        info: cause""", Message.info("body", Message.info("cause")).toString());
   }
   @Test void infoListsCauses() {
-    assertEquals(
-      "info: body Due to:%n  info: cause1%n  info: cause2".formatted(),
-      Message.info("body", Message.info("cause1"), Message.info("cause2"))
-        .toString());
+    assertEquals("""
+      info: body Due to:
+        info: cause1
+        info: cause2""", Message
+      .info("body", Message.info("cause1"), Message.info("cause2")).toString());
   }
   @Test void infoIndentsNestedCauses() {
-    assertEquals(
-      "info: body Due to:%n  info: cause Due to:%n    info: cause of cause"
-        .formatted(),
+    assertEquals("""
+      info: body Due to:
+        info: cause Due to:
+          info: cause of cause""",
       Message
         .info("body", Message.info("cause", Message.info("cause of cause")))
         .toString());
@@ -119,11 +135,15 @@ final class MessageTest {
       Message.group(Message.error("body")).toString());
   }
   @Test void groupListsMembers() {
-    assertEquals("error: body1%nwarning: body2".formatted(), Message
+    assertEquals("""
+      error: body1
+      warning: body2""", Message
       .group(Message.error("body1"), Message.warning("body2")).toString());
   }
   @Test void groupIndentsMemberCauses() {
-    assertEquals("error: body1 Due to:%n  warning: body2".formatted(), Message
+    assertEquals("""
+      error: body1 Due to:
+        warning: body2""", Message
       .group(Message.error("body1", Message.warning("body2"))).toString());
   }
 }
