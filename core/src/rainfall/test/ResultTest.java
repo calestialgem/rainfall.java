@@ -6,15 +6,12 @@ import rainfall.Result;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ResultTest {
+final class ResultTest {
   @Test void failureIsFailure() { assertTrue(Result.failure(1).isFailure()); }
   @Test void failureIsNotSuccess() {
     assertFalse(Result.failure(1).isSuccess());
   }
-  @Test void failureHasError() {
-    final var error = 1;
-    assertEquals(error, Result.failure(error).error());
-  }
+  @Test void failureHasError() { assertEquals(1, Result.failure(1).error()); }
   @Test void failureDoesNotHaveValue() {
     assertThrows(UnsupportedOperationException.class, Result.failure(1)::value);
   }
@@ -26,8 +23,5 @@ class ResultTest {
   @Test void successDoesNotHaveError() {
     assertThrows(UnsupportedOperationException.class, Result.success(1)::error);
   }
-  @Test void successHasValue() {
-    final var value = 1;
-    assertEquals(value, Result.success(value).value());
-  }
+  @Test void successHasValue() { assertEquals(1, Result.success(1).value()); }
 }

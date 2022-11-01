@@ -6,7 +6,7 @@ import rainfall.Message;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MessageTest {
+final class MessageTest {
   @Test void failureIsResult() { assertTrue(Message.failure("").isFailure()); }
   @Test void failureIsError() {
     assertEquals("error: ", Message.failure("").error().toString());

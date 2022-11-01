@@ -15,8 +15,5 @@ final class BoxTest {
 
   @Test void fullIsNotEmpty() { assertFalse(Box.full(1).isEmpty()); }
   @Test void fullIsFull() { assertTrue(Box.full(1).isFull()); }
-  @Test void fullHasValue() {
-    final var value = 1;
-    assertEquals(value, Box.full(value).value());
-  }
+  @Test void fullHasValue() { assertEquals(1, Box.full(1).value()); }
 }

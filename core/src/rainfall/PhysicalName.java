@@ -2,10 +2,10 @@ package rainfall;
 
 public final class PhysicalName {
   private final String value;
-  private PhysicalName(final String value) { this.value = value; }
+  private PhysicalName(String value) { this.value = value; }
 
-  public static Result<PhysicalName, Message> of(final String value) {
-    final var asASCII = value.getBytes();
+  public static Result<PhysicalName, Message> of(String value) {
+    var asASCII = value.getBytes();
     if (asASCII.length == 0) {
       return Message.failure("Name cannot be empty!");
     }
@@ -13,7 +13,7 @@ public final class PhysicalName {
       return Result.failure(
         Message.error("Name must start with an uppercase English letter!"));
     }
-    for (final var character : asASCII) {
+    for (var character : asASCII) {
       if (!isValid(character)) {
         return Message.failure(
           "Name must solely consist of English letters and decimal digits!");
@@ -24,17 +24,17 @@ public final class PhysicalName {
 
   public String value() { return value; }
 
-  private static boolean isValid(final byte character) {
+  private static boolean isValid(byte character) {
     return isUppercase(character) || isLowercase(character)
       || isDigit(character);
   }
-  private static boolean isUppercase(final byte character) {
+  private static boolean isUppercase(byte character) {
     return character >= 'A' && character <= 'Z';
   }
-  private static boolean isLowercase(final byte character) {
+  private static boolean isLowercase(byte character) {
     return character >= 'a' && character <= 'z';
   }
-  private static boolean isDigit(final byte character) {
+  private static boolean isDigit(byte character) {
     return character >= '0' && character <= '9';
   }
 }

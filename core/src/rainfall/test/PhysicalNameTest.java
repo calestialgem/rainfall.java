@@ -6,7 +6,7 @@ import rainfall.PhysicalName;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PhysicalNameTest {
+final class PhysicalNameTest {
   @Test void deniesEmptyValue() { assertTrue(PhysicalName.of("").isFailure()); }
 
   @Test void deniesLowercaseInitial() {
