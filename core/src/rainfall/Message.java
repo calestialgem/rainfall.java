@@ -17,8 +17,8 @@ public sealed abstract class Message {
   public static Message group() {
     throw new IllegalArgumentException("There are no messages to group!");
   }
-  public static Message group(Message member) { return member; }
-  public static Message group(Message... members) {
+  public static Message group(final Message member) { return member; }
+  public static Message group(final Message... members) {
     return new Multiple(members);
   }
 
@@ -52,7 +52,7 @@ public sealed abstract class Message {
 
   private static final class Multiple extends Message {
     private final Message[] members;
-    private Multiple(Message... members) { this.members = members; }
+    private Multiple(final Message... members) { this.members = members; }
 
     @Override protected String toString(int indentationLevel) {
       final var builder = new StringBuilder();
