@@ -35,7 +35,7 @@ class PhysicalNameTest {
     assertTrue(PhysicalName.of("A_").isFailure());
   }
 
-  @Test void hasGivenValue() {
+  @Test void acceptedHasValue() {
     assertEquals("A", PhysicalName.of("A").value().value());
   }
 }
