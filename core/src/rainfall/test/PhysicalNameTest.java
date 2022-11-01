@@ -24,7 +24,9 @@ final class PhysicalNameTest {
     assertTrue(PhysicalName.of("A").isSuccess());
   }
   @Test void deniesInvalidInitial() {
-    assertEquals("error: Name must start with an uppercase English letter!",
+    assertEquals("""
+      error: Name must start with an uppercase English letter!
+      error: Name must solely consist of English letters and decimal digits!""",
       PhysicalName.of("_").error().toString());
   }
 
