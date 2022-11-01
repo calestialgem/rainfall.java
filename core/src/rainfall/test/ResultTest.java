@@ -7,30 +7,26 @@ import rainfall.Result;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ResultTest {
-  @Test void failureResultIsFailure() {
-    assertTrue(Result.failure(1).isFailure());
-  }
-  @Test void failureResultIsNotSuccess() {
+  @Test void failureIsFailure() { assertTrue(Result.failure(1).isFailure()); }
+  @Test void failureIsNotSuccess() {
     assertFalse(Result.failure(1).isSuccess());
   }
-  @Test void failureResultHasTheGivenError() {
+  @Test void failureHasError() {
     final var error = 1;
     assertEquals(error, Result.failure(error).error());
   }
-  @Test void failureResultDoesNotHaveAValue() {
+  @Test void failureDoesNotHaveValue() {
     assertThrows(UnsupportedOperationException.class, Result.failure(1)::value);
   }
 
-  @Test void successResultIsNotFailure() {
+  @Test void successIsNotFailure() {
     assertFalse(Result.success(1).isFailure());
   }
-  @Test void successResultIsSuccess() {
-    assertTrue(Result.success(1).isSuccess());
-  }
-  @Test void successResultDoesNotHaveAnError() {
+  @Test void successIsSuccess() { assertTrue(Result.success(1).isSuccess()); }
+  @Test void successDoesNotHaveError() {
     assertThrows(UnsupportedOperationException.class, Result.success(1)::error);
   }
-  @Test void successResultHasTheGivenValue() {
+  @Test void successHasValue() {
     final var value = 1;
     assertEquals(value, Result.success(value).value());
   }
