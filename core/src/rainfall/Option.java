@@ -1,6 +1,7 @@
 package rainfall;
 
 import java.nio.file.Path;
+import java.util.Map;
 
 public sealed abstract class Option {
   public static final class Directory extends Option {
@@ -11,4 +12,13 @@ public sealed abstract class Option {
   }
 
   public static Directory directory(Path path) { return new Directory(path); }
+
+  public static Result<Void, Message>
+    register(Map<Class<? extends Option>, Option> target, Option registered) {
+    if (target.containsKey(registered.getClass())) {
+      return Message.failure("Option is already provided!");
+    }
+    target.put(registered.getClass(), registered);
+    return Result.success(null);
+  }
 }
