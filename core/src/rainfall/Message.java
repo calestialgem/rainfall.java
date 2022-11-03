@@ -23,6 +23,13 @@ public sealed abstract class Message {
   public static Message group(Message... members) {
     return new Multiple(List.of(members));
   }
+  public static Message group(List<Message> members) {
+    if (members.isEmpty()) {
+      throw new IllegalArgumentException("There are no messages to group!");
+    }
+    if (members.count() == 1) { return members.get(0); }
+    return new Multiple(members);
+  }
 
   @Override public String toString() { return toString(0); }
   protected abstract String toString(int indentationLevel);

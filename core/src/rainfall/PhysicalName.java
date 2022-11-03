@@ -1,7 +1,5 @@
 package rainfall;
 
-import java.util.ArrayList;
-
 public final class PhysicalName {
   private final String value;
   private PhysicalName(String value) { this.value = value; }
@@ -11,21 +9,20 @@ public final class PhysicalName {
     if (asASCII.length == 0) {
       return Message.failure("Name cannot be empty!");
     }
-    var errorMessages = new ArrayList<Message>();
+    var errorMessages = List.<Message>mutable();
     if (!isUppercase(asASCII[0])) {
-      errorMessages.add(
+      errorMessages.push(
         Message.error("Name must start with an uppercase English letter!"));
     }
     for (var character : asASCII) {
       if (!isValid(character)) {
-        errorMessages.add(Message.error(
+        errorMessages.push(Message.error(
           "Name must solely consist of English letters and decimal digits!"));
         break;
       }
     }
-    if (!errorMessages.isEmpty()) {
-      return Result
-        .failure(Message.group(errorMessages.toArray(Message[]::new)));
+    if (errorMessages.isFinite()) {
+      return Result.failure(Message.group(errorMessages));
     }
     return Result.success(new PhysicalName(value));
   }

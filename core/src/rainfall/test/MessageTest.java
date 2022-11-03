@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import rainfall.List;
 import rainfall.Message;
 
 final class MessageTest {
@@ -169,5 +170,33 @@ final class MessageTest {
       error: %s Due to:
         warning: %s""".formatted(bodies[0], bodies[1]), Message
       .group(Message.error(bodies[0], Message.warning(bodies[1]))).toString());
+  }
+
+  @Test void groupingListMustHaveMembers() {
+    assertThrows(IllegalArgumentException.class,
+      () -> Message.group(List.of()));
+  }
+  @Test void groupingListShowsMember() {
+    var body = "b";
+    assertEquals("error: %s".formatted(body),
+      Message.group(List.of(Message.error(body))).toString());
+  }
+  @Test void groupingListListsMembers() {
+    var bodies = new String[] { "b0", "b1" };
+    assertEquals("""
+      error: %s
+      warning: %s""".formatted(bodies[0], bodies[1]),
+      Message
+        .group(List.of(Message.error(bodies[0]), Message.warning(bodies[1])))
+        .toString());
+  }
+  @Test void groupingListIndentsMemberCauses() {
+    var bodies = new String[] { "b0", "b1" };
+    assertEquals("""
+      error: %s Due to:
+        warning: %s""".formatted(bodies[0], bodies[1]),
+      Message
+        .group(List.of(Message.error(bodies[0], Message.warning(bodies[1]))))
+        .toString());
   }
 }
