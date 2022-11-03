@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import rainfall.Command;
 import rainfall.PhysicalName;
+import rainfall.launcher.Command;
 
 final class CommandTest {
   @Test void newHasName() {

@@ -1,6 +1,6 @@
-package rainfall;
+package rainfall.cli;
 
-class CommandLineInterface {
+public class CommandLineInterface {
   public static void main(String[] arguments) {
     System.out.println("Hello, world!");
   }

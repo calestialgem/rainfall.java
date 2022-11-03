@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
 
-import rainfall.Option;
+import rainfall.launcher.Option;
 
 final class OptionTest {
   @Test void directoryHasPath() {

@@ -1,6 +1,8 @@
-package rainfall;
+package rainfall.launcher;
 
 import java.util.List;
+
+import rainfall.PhysicalName;
 
 public sealed abstract class Command {
   public static final class New extends Command {
