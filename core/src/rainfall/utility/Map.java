@@ -12,7 +12,7 @@ public sealed abstract class Map<Key, Value> {
   }
 
   public static <Key, Value> Mutable<Key, Value> mutable() {
-    return new Mutable<>(emptyBuckets(0), 0);
+    return new Mutable<>(emptyBuckets(0), emptyBuckets(0), 0);
   }
 
   @SafeVarargs public static <Key, Value> Map<Key, Value>
@@ -35,11 +35,14 @@ public sealed abstract class Map<Key, Value> {
   }
 
   public static final class Mutable<Key, Value> extends Map<Key, Value> {
-    private Box<Entry<Key, Value>>[] buckets;
-    private int                      count;
-    private Mutable(Box<Entry<Key, Value>>[] buckets, int elements) {
-      this.buckets = buckets;
-      this.count   = elements;
+    private Box<Key>[]   keyBuckets;
+    private Box<Value>[] valueBuckets;
+    private int          count;
+    private Mutable(Box<Key>[] keyBuckets, Box<Value>[] valueBuckets,
+      int elements) {
+      this.keyBuckets   = keyBuckets;
+      this.valueBuckets = valueBuckets;
+      this.count        = elements;
     }
 
     @Override public boolean isEmpty() { return count == 0; }
@@ -47,19 +50,22 @@ public sealed abstract class Map<Key, Value> {
     @Override public int count() { return count; }
     @Override public boolean contains(Key key) {
       var start = key.hashCode();
-      for (var index = 0; index < buckets.length; index++) {
-        var bucket = buckets[(start + index) % buckets.length];
+      for (var index = 0; index < keyBuckets.length; index++) {
+        var bucket = keyBuckets[(start + index) % keyBuckets.length];
         if (bucket.isEmpty()) { break; }
-        if (bucket.value().key().equals(key)) { return true; }
+        if (bucket.value().equals(key)) { return true; }
       }
       return false;
     }
     @Override public Value get(Key key) {
       var start = key.hashCode();
-      for (var index = 0; index < buckets.length; index++) {
-        var bucket = buckets[(start + index) % buckets.length];
+      for (var index = 0; index < keyBuckets.length; index++) {
+        int bucketIndex = (start + index) % keyBuckets.length;
+        var bucket      = keyBuckets[bucketIndex];
         if (bucket.isEmpty()) { break; }
-        if (bucket.value().key().equals(key)) { return bucket.value().value(); }
+        if (bucket.value().equals(key)) {
+          return valueBuckets[bucketIndex].value();
+        }
       }
       throw new UnsupportedOperationException(
         "There is no entry for the given key in the map!");
@@ -71,30 +77,35 @@ public sealed abstract class Map<Key, Value> {
     }
 
     private void growIfNecessary() {
-      if (buckets.length == 0 || (double) count / buckets.length >= 0.5) {
-        var rehashed = new Mutable<Key, Value>(
-          emptyBuckets(buckets.length == 0 ? 16 : buckets.length * 16), 0);
-        for (var bucket : buckets) {
-          if (bucket.isFull()) {
-            rehashed.uncheckedPut(bucket.value().key(), bucket.value().value());
+      if (keyBuckets.length == 0 || (double) count / keyBuckets.length >= 0.5) {
+        int newCapacity = keyBuckets.length == 0 ? 16 : keyBuckets.length * 16;
+        var rehashed    = new Mutable<Key, Value>(emptyBuckets(newCapacity),
+          emptyBuckets(newCapacity), 0);
+        for (var bucketIndex = 0; bucketIndex < keyBuckets.length;
+          bucketIndex++) {
+          var keyBucket = keyBuckets[bucketIndex];
+          if (keyBucket.isFull()) {
+            rehashed.uncheckedPut(keyBucket.value(),
+              valueBuckets[bucketIndex].value());
           }
         }
-        buckets = rehashed.buckets;
+        keyBuckets   = rehashed.keyBuckets;
+        valueBuckets = rehashed.valueBuckets;
       }
     }
 
     private void uncheckedPut(Key insertedKey, Value insertedValue) {
       var start = insertedKey.hashCode();
-      for (var index = 0; index < buckets.length; index++) {
-        var bucketIndex = (start + index) % buckets.length;
-        var bucket      = buckets[bucketIndex];
+      for (var index = 0; index < keyBuckets.length; index++) {
+        var bucketIndex = (start + index) % keyBuckets.length;
+        var bucket      = keyBuckets[bucketIndex];
         if (bucket.isEmpty()) {
-          buckets[bucketIndex] =
-            Box.full(Map.entry(insertedKey, insertedValue));
+          keyBuckets[bucketIndex]   = Box.full(insertedKey);
+          valueBuckets[bucketIndex] = Box.full(insertedValue);
           count++;
           return;
         }
-        if (bucket.value().key().equals(insertedKey)) { return; }
+        if (bucket.value().equals(insertedKey)) { return; }
       }
       throw new UnsupportedOperationException(
         "There is no place in map to put the entry!");
