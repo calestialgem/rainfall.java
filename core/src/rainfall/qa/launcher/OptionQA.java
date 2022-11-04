@@ -12,24 +12,24 @@ import org.junit.jupiter.api.Test;
 import rainfall.launcher.Option;
 
 final class OptionQA {
-  @Test void directoryHasPath() {
+  @Test void aDirectoryHasTheGivenPath() {
     var path = Path.of(".");
     assertEquals(path, Option.directory(path).path());
   }
 
-  @Test void registrationAcceptsNonexistingOption() {
+  @Test void anEmptyOptionMapAcceptsRegisteringAnOption() {
     var option  = Option.directory(Path.of("."));
     var options = new HashMap<Class<? extends Option>, Option>();
     assertTrue(Option.register(options, option).isSuccess());
   }
-  @Test void registersNonexistingOption() {
+  @Test void anEmptyOptionMapAfterRegisteringContainsRegisteredOption() {
     var option  = Option.directory(Path.of("."));
     var options = new HashMap<Class<? extends Option>, Option>();
     Option.register(options, option);
     assertTrue(options.containsKey(option.getClass()));
     assertEquals(option, options.get(option.getClass()));
   }
-  @Test void registrationDeclinesExistingOption() {
+  @Test void anOptionMapWithAnOptionDeclinesRegisteringAnOptionOfTheSameType() {
     var first   = Option.directory(Path.of("."));
     var second  = Option.directory(Path.of(".."));
     var options = new HashMap<Class<? extends Option>, Option>();
@@ -37,7 +37,8 @@ final class OptionQA {
     assertEquals("error: Option is already provided!",
       Option.register(options, second).error().toString());
   }
-  @Test void doesNotRegisterExistingOption() {
+  @Test void
+    anOptionMapWithAnOptionAfterRegisteringAnOptionOfTheSameTypeKeepsThePreviousOption() {
     var first   = Option.directory(Path.of("."));
     var second  = Option.directory(Path.of(".."));
     var options = new HashMap<Class<? extends Option>, Option>();

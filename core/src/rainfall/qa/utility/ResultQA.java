@@ -10,26 +10,30 @@ import org.junit.jupiter.api.Test;
 import rainfall.utility.Result;
 
 final class ResultQA {
-  @Test void failureIsFailure() { assertTrue(Result.failure(1).isFailure()); }
-  @Test void failureIsNotSuccess() {
+  @Test void aFailureResultIsFailure() {
+    assertTrue(Result.failure(1).isFailure());
+  }
+  @Test void aFailureResultIsNotSuccess() {
     assertFalse(Result.failure(1).isSuccess());
   }
-  @Test void failureHasError() {
+  @Test void aFailureResultHasTheGivenError() {
     var error = 1;
     assertEquals(error, Result.failure(error).error());
   }
-  @Test void failureDoesNotHaveValue() {
+  @Test void aFailureResultThrowsWhenItsValueIsAccessed() {
     assertThrows(UnsupportedOperationException.class, Result.failure(1)::value);
   }
 
-  @Test void successIsNotFailure() {
+  @Test void aSuccessResultIsNotFailure() {
     assertFalse(Result.success(1).isFailure());
   }
-  @Test void successIsSuccess() { assertTrue(Result.success(1).isSuccess()); }
-  @Test void successDoesNotHaveError() {
+  @Test void aSuccessResultIsSuccess() {
+    assertTrue(Result.success(1).isSuccess());
+  }
+  @Test void aSuccessResultThrowsWhenItsErrorIsAccessed() {
     assertThrows(UnsupportedOperationException.class, Result.success(1)::error);
   }
-  @Test void successHasValue() {
+  @Test void aSuccessHasTheGivenValue() {
     var value = 1;
     assertEquals(value, Result.success(value).value());
   }

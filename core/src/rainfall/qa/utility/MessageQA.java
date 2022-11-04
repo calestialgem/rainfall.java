@@ -10,23 +10,25 @@ import rainfall.utility.List;
 import rainfall.utility.Message;
 
 final class MessageQA {
-  @Test void failureIsResult() { assertTrue(Message.failure("").isFailure()); }
-  @Test void failureIsError() {
+  @Test void aFailureMessageResultIsFailure() {
+    assertTrue(Message.failure("").isFailure());
+  }
+  @Test void aFailureMessageResultIsTitledAsError() {
     assertEquals("error: ", Message.failure("").error().toString());
   }
-  @Test void failureShowsBody() {
+  @Test void aFailureMessageResultShowsTheGivenBody() {
     var body = "b";
     assertEquals("error: %s".formatted(body),
       Message.failure(body).error().toString());
   }
-  @Test void failureShowsCause() {
+  @Test void aFailureMessageResultShowsTheGivenCause() {
     var bodies = new String[] { "b", "c" };
     assertEquals("""
       error: %s Due to:
         error: %s""".formatted(bodies[0], bodies[1]),
       Message.failure(bodies[0], Message.error(bodies[1])).error().toString());
   }
-  @Test void failureListsCauses() {
+  @Test void aFailureMessageResultShowsTheGivenCauses() {
     var bodies = new String[] { "b", "c0", "c1" };
     assertEquals("""
       error: %s Due to:
@@ -36,7 +38,7 @@ final class MessageQA {
         .failure(bodies[0], Message.error(bodies[1]), Message.error(bodies[2]))
         .error().toString());
   }
-  @Test void failureIndentsNestedCauses() {
+  @Test void aFailureMessageResultsIndentsTheGivenNestedCauses() {
     var bodies = new String[] { "b", "c", "cc" };
     assertEquals("""
       error: %s Due to:
@@ -47,21 +49,21 @@ final class MessageQA {
         .error().toString());
   }
 
-  @Test void errorShowsCorrectTitle() {
+  @Test void anErrorMessageIsTitledAsError() {
     assertEquals("error: ", Message.error("").toString());
   }
-  @Test void errorShowsBody() {
+  @Test void anErrorMessageShowsTheGivenBody() {
     var body = "b";
     assertEquals("error: %s".formatted(body), Message.error(body).toString());
   }
-  @Test void errorShowsCause() {
+  @Test void anErrorMessageShowsTheGivenCause() {
     var bodies = new String[] { "b", "c" };
     assertEquals("""
       error: %s Due to:
         error: %s""".formatted(bodies[0], bodies[1]),
       Message.error(bodies[0], Message.error(bodies[1])).toString());
   }
-  @Test void errorListsCauses() {
+  @Test void anErrorMessageShowsTheGivenCauses() {
     var bodies = new String[] { "b", "c0", "c1" };
     assertEquals("""
       error: %s Due to:
@@ -71,7 +73,7 @@ final class MessageQA {
         .error(bodies[0], Message.error(bodies[1]), Message.error(bodies[2]))
         .toString());
   }
-  @Test void errorIndentsNestedCauses() {
+  @Test void anErrorMessageIndentsTheGivenNestedCauses() {
     var bodies = new String[] { "b", "c", "cc" };
     assertEquals("""
       error: %s Due to:
@@ -82,22 +84,22 @@ final class MessageQA {
         .toString());
   }
 
-  @Test void warningShowsCorrectTitle() {
+  @Test void aWarningMessageIsTitledAsWarning() {
     assertEquals("warning: ", Message.warning("").toString());
   }
-  @Test void warningShowsBody() {
+  @Test void aWarningMessageShowsTheGivenBody() {
     var body = "b";
     assertEquals("warning: %s".formatted(body),
       Message.warning(body).toString());
   }
-  @Test void warningShowsCause() {
+  @Test void aWarningMessageShowsTheGivenCause() {
     var bodies = new String[] { "b", "c" };
     assertEquals("""
       warning: %s Due to:
         warning: %s""".formatted(bodies[0], bodies[1]),
       Message.warning(bodies[0], Message.warning(bodies[1])).toString());
   }
-  @Test void warningListsCauses() {
+  @Test void aWarningMessageShowsTheGivenCauses() {
     var bodies = new String[] { "b", "c0", "c1" };
     assertEquals("""
       warning: %s Due to:
@@ -106,7 +108,7 @@ final class MessageQA {
       Message.warning(bodies[0], Message.warning(bodies[1]),
         Message.warning(bodies[2])).toString());
   }
-  @Test void warningIndentsNestedCauses() {
+  @Test void aWarningMessageIndentsTheGivenNestedCauses() {
     var bodies = new String[] { "b", "c", "cc" };
     assertEquals("""
       warning: %s Due to:
@@ -116,21 +118,21 @@ final class MessageQA {
         Message.warning(bodies[1], Message.warning(bodies[2]))).toString());
   }
 
-  @Test void infoShowsCorrectTitle() {
+  @Test void anInfoMessageIsTitledAsInfo() {
     assertEquals("info: ", Message.info("").toString());
   }
-  @Test void infoShowsBody() {
+  @Test void anInfoMessageShowsTheGivenBody() {
     var body = "b";
     assertEquals("info: %s".formatted(body), Message.info(body).toString());
   }
-  @Test void infoShowsCause() {
+  @Test void anInfoMessageShowsTheGivenCause() {
     var bodies = new String[] { "b", "c" };
     assertEquals("""
       info: %s Due to:
         info: %s""".formatted(bodies[0], bodies[1]),
       Message.info(bodies[0], Message.info(bodies[1])).toString());
   }
-  @Test void infoListsCauses() {
+  @Test void anInfoMessageShowsTheGivenCauses() {
     var bodies = new String[] { "b", "c0", "c1" };
     assertEquals("""
       info: %s Due to:
@@ -139,7 +141,7 @@ final class MessageQA {
       Message.info(bodies[0], Message.info(bodies[1]), Message.info(bodies[2]))
         .toString());
   }
-  @Test void infoIndentsNestedCauses() {
+  @Test void anInfoMessageIndentsTheGivenNestedCauses() {
     var bodies = new String[] { "b", "c", "cc" };
     assertEquals("""
       info: %s Due to:
@@ -149,22 +151,22 @@ final class MessageQA {
         .toString());
   }
 
-  @Test void groupMustHaveMembers() {
+  @Test void creatingAGroupWithoutMembersThrows() {
     assertThrows(IllegalArgumentException.class, () -> Message.group());
   }
-  @Test void groupShowsMember() {
+  @Test void aGroupShowsItsMember() {
     var body = "b";
     assertEquals("error: %s".formatted(body),
       Message.group(Message.error(body)).toString());
   }
-  @Test void groupListsMembers() {
+  @Test void aGroupShowsItsMembers() {
     var bodies = new String[] { "b0", "b1" };
     assertEquals("""
       error: %s
       warning: %s""".formatted(bodies[0], bodies[1]), Message
       .group(Message.error(bodies[0]), Message.warning(bodies[1])).toString());
   }
-  @Test void groupIndentsMemberCauses() {
+  @Test void aGroupIndentsTheCausesOfItsMembers() {
     var bodies = new String[] { "b0", "b1" };
     assertEquals("""
       error: %s Due to:
@@ -172,16 +174,16 @@ final class MessageQA {
       .group(Message.error(bodies[0], Message.warning(bodies[1]))).toString());
   }
 
-  @Test void groupingListMustHaveMembers() {
+  @Test void creatingAGroupWithEmptyMemberListThrows() {
     assertThrows(IllegalArgumentException.class,
       () -> Message.group(List.of()));
   }
-  @Test void groupingListShowsMember() {
+  @Test void aGroupThatIsCreatedFromAListShowsTheMemberGivenInThatList() {
     var body = "b";
     assertEquals("error: %s".formatted(body),
       Message.group(List.of(Message.error(body))).toString());
   }
-  @Test void groupingListListsMembers() {
+  @Test void aGroupThatIsCreatedFromAListShowsTheMembersGivenInThatList() {
     var bodies = new String[] { "b0", "b1" };
     assertEquals("""
       error: %s
@@ -190,7 +192,7 @@ final class MessageQA {
         .group(List.of(Message.error(bodies[0]), Message.warning(bodies[1])))
         .toString());
   }
-  @Test void groupingListIndentsMemberCauses() {
+  @Test void aGroupThatIsCreatedFromAListIndentsTheCausesOfItsMembers() {
     var bodies = new String[] { "b0", "b1" };
     assertEquals("""
       error: %s Due to:

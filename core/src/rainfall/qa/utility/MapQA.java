@@ -150,28 +150,30 @@ final class MapQA {
       () -> Map.mutable().get(1));
   }
 
-  @Test void puttingToANewlyCreatedMutableMapMakesItNotEmpty() {
+  @Test void aNewlyCreatedMutableMapAfterPuttingAnEntryIsNotEmpty() {
     var map = Map.mutable();
     map.put(1, 1);
     assertFalse(map.isEmpty());
   }
-  @Test void puttingToANewlyCreatedMutableMapMakesItFinite() {
+  @Test void aNewlyCreatedMutableMapAfterPuttingAnEntryIsFinite() {
     var map = Map.mutable();
     map.put(1, 1);
     assertTrue(map.isFinite());
   }
-  @Test void puttingToANewlyCreatedMutableMapIncrementsItsCount() {
+  @Test void countOfANewlyCreatedMutableMapAfterPuttingAnEntryIsZero() {
     var map = Map.mutable();
     map.put(1, 1);
     assertEquals(1, map.count());
   }
-  @Test void aNewlyCreatedMutableMapThatIsPutContainsThePutKey() {
+  @Test void
+    aNewlyCreatedMutableMapAfterPuttingAnEntryContainsTheKeyOfThatEntry() {
     var key = 1;
     var map = Map.mutable();
     map.put(key, 1);
     assertTrue(map.contains(key));
   }
-  @Test void aNewlyCreatedMutableMapThatIsPutContainsThePutValue() {
+  @Test void
+    aNewlyCreatedMutableMapAfterPuttingAnEntryContainsTheValueOfThatEntry() {
     var key   = 1;
     var value = 1;
     var map   = Map.mutable();
@@ -179,52 +181,71 @@ final class MapQA {
     assertEquals(value, map.get(key));
   }
   @Test void
-    aNewlyCreatedAndInsertedMapDoesNotContainKeysThatWereNotInserted() {
+    aNewlyCreatedMutableMapAfterPuttingAnEntryDoesNotContainUnspecifiedKeys() {
     var map = Map.mutable();
     map.put(1, 1);
     assertFalse(map.contains(2));
     assertFalse(map.contains(3));
   }
   @Test void
-    aNewlyCreatedAndInsertedMapThrowsWhenAccessedWithAKeyThatWasNotInserted() {
+    aNewlyCreatedMutableMapAfterPuttingAnEntryThrowsWhenAccessedWithAnUnspecifiedKey() {
     var map = Map.mutable();
     map.put(1, 1);
     assertThrows(UnsupportedOperationException.class, () -> map.get(2));
   }
 
-  @Test void insertingToAFiniteMutableMapDoesNotMakeItEmpty() {
+  @Test void aFiniteMutableMapAfterPuttingAnEntryIsNotEmpty() {
     var map = Map.mutable();
     map.put(1, 1);
     map.put(2, 2);
     assertFalse(map.isEmpty());
   }
-  @Test void pushingToAFiniteMutableMapKeepsItFinite() {
+  @Test void aFiniteMutableMapAfterPuttingAnEntryIsFinite() {
     var map = Map.mutable();
     map.put(1, 1);
     map.put(2, 2);
     assertTrue(map.isFinite());
   }
-  @Test void pushingToAFiniteMutableMapIncrementsItsCount() {
+  @Test void puttingToAFiniteMutableMapIncrementsItsCount() {
     var map = Map.mutable();
     map.put(1, 1);
     map.put(2, 2);
     assertEquals(2, map.count());
   }
-  @Test void pushingToAFiniteMutableMapInsertsPushedKey() {
+  @Test void aFiniteMutableMapAfterPuttingAnEntryContainsTheKeyOfThatEntry() {
     var key = 2;
     var map = Map.mutable();
     map.put(1, 1);
     map.put(key, 2);
     assertTrue(map.contains(key));
   }
-  @Test void pushingToAFiniteMutableMapKeepsPreviousKey() {
+  @Test void aFiniteMutableMapAfterPuttingAnEntryContainsTheValueOfThatEntry() {
+    var key   = 2;
+    var value = 2;
+    var map   = Map.mutable();
+    map.put(1, 1);
+    map.put(key, value);
+    assertEquals(value, map.get(key));
+  }
+  @Test void
+    aFiniteMutableMapAfterPuttingAnEntryContainsTheKeyOfAPreviousEntry() {
     var previousKey = 1;
     var map         = Map.mutable();
     map.put(previousKey, 1);
     map.put(2, 2);
     assertTrue(map.contains(previousKey));
   }
-  @Test void pushingToAFiniteMutableMapKeepsPreviousKeys() {
+  @Test void
+    aFiniteMutableMapAfterPuttingAnEntryContainsTheValueOfAPreviousEntry() {
+    var previousKey   = 1;
+    var previousValue = 1;
+    var map           = Map.mutable();
+    map.put(previousKey, previousValue);
+    map.put(2, 2);
+    assertEquals(previousValue, map.get(previousKey));
+  }
+  @Test void
+    aFiniteMutableMapAfterPuttingAnEntryContainsTheKeysOfThePreviousEntries() {
     var previousKeys = new int[] { 1, 2 };
     var map          = Map.mutable();
     map.put(previousKeys[0], 1);
@@ -233,36 +254,54 @@ final class MapQA {
     assertTrue(map.contains(previousKeys[0]));
     assertTrue(map.contains(previousKeys[1]));
   }
-  @Test void pushingToAFiniteMutableMapDoesNotInsertUnspecifiedKeys() {
+  @Test void
+    aFiniteMutableMapAfterPuttingAnEntryContainsTheValueOfThePreviousEntries() {
+    var previousKeys   = new int[] { 1, 2 };
+    var previousValues = new int[] { 1, 2 };
+    var map            = Map.mutable();
+    map.put(previousKeys[0], previousValues[0]);
+    map.put(previousKeys[1], previousValues[1]);
+    map.put(3, 3);
+    assertEquals(previousValues[0], map.get(previousKeys[0]));
+    assertEquals(previousValues[1], map.get(previousKeys[1]));
+  }
+  @Test void
+    aFiniteMutableMapAfterPuttingAnEntryDoesNotContainUnspecifiedKeys() {
     var map = Map.mutable();
     map.put(1, 1);
     map.put(2, 2);
     assertFalse(map.contains(3));
     assertFalse(map.contains(4));
   }
-
   @Test void
-    pushingAnEntryWithAnExistingKeyToAFiniteMutableMapDoesNotMakeItEmpty() {
+    aFiniteMutableMapAfterPuttingAnEntryThrowsWhenAccessedWithAnUnspecifiedKey() {
+    var map = Map.mutable();
+    map.put(1, 1);
+    map.put(2, 2);
+    assertThrows(UnsupportedOperationException.class, () -> map.get(3));
+  }
+
+  @Test void aFiniteMutableMapAfterPuttingAnEntryWithADuplicateKeyIsNotEmpty() {
     var map = Map.mutable();
     map.put(1, 1);
     map.put(1, 1);
     assertFalse(map.isEmpty());
   }
-  @Test void pushingAnEntryWithAnExistingKeyToAFiniteMutableMapKeepsItFinite() {
+  @Test void aFiniteMutableMapAfterPuttingAnEntryWithADuplicateKeyIsFinite() {
     var map = Map.mutable();
     map.put(1, 1);
     map.put(1, 1);
     assertTrue(map.isFinite());
   }
   @Test void
-    pushingAnEntryWithAnExistingKeyToAFiniteMutableMapKeepsItsCountSame() {
+    countOfAFiniteMutableMapAfterPuttingAnEntryWithADuplicateKeyStaysSame() {
     var map = Map.mutable();
     map.put(1, 1);
     map.put(1, 1);
     assertEquals(1, map.count());
   }
   @Test void
-    pushingAnEntryWithAnExistingKeyToAFiniteMutableMapKeepsPreviousKey() {
+    aFiniteMutableMapAfterPuttingAnEntryWithADuplicateKeyContainsThePreviousKey() {
     var previousKey = 1;
     var map         = Map.mutable();
     map.put(previousKey, 1);
@@ -270,7 +309,7 @@ final class MapQA {
     assertTrue(map.contains(previousKey));
   }
   @Test void
-    pushingAnEntryWithAnExistingKeyToAFiniteMutableMapKeepsPreviousKeys() {
+    aFiniteMutableMapAfterPuttingAnEntryWithADuplicateKeyContainsThePreviousKeys() {
     var previousKeys = new int[] { 1, 2 };
     var map          = Map.mutable();
     map.put(previousKeys[0], 1);
@@ -280,7 +319,7 @@ final class MapQA {
     assertTrue(map.contains(previousKeys[1]));
   }
   @Test void
-    pushingAnEntryWithAnExistingKeyToAFiniteMutableMapDoesNotInsertUnspecifiedKeys() {
+    aFiniteMutableMapAfterPuttingAnEntryWithADuplicateKeyDoesNotContainUnspecifiedKeys() {
     var map = Map.mutable();
     map.put(1, 1);
     map.put(1, 1);

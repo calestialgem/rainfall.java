@@ -9,84 +9,105 @@ import org.junit.jupiter.api.Test;
 import rainfall.utility.List;
 
 final class ListQA {
-  @Test void emptyIsEmpty() { assertTrue(List.of().isEmpty()); }
-  @Test void emptyIsNotFinite() { assertFalse(List.of().isFinite()); }
-  @Test void emptyHasZeroCount() { assertEquals(0, List.of().count()); }
+  @Test void aListThatWasCreatedWithoutElementsIsEmpty() {
+    assertTrue(List.of().isEmpty());
+  }
+  @Test void aListThatWasCreatedWithoutElementsIsNotFinite() {
+    assertFalse(List.of().isFinite());
+  }
+  @Test void countOfAListThatWasCreatedWithoutElementsIsZero() {
+    assertEquals(0, List.of().count());
+  }
 
-  @Test void singleElementIsNotEmpty() { assertFalse(List.of(1).isEmpty()); }
-  @Test void singleElementIsFinite() { assertTrue(List.of(1).isFinite()); }
-  @Test void singleElementHasOneCount() { assertEquals(1, List.of(1).count()); }
-  @Test void singleElementHasElement() {
+  @Test void aListThatWasCreatedWithAnElementIsNotEmpty() {
+    assertFalse(List.of(1).isEmpty());
+  }
+  @Test void aListThatWasCreatedWithAnElementIsFinite() {
+    assertTrue(List.of(1).isFinite());
+  }
+  @Test void countOfAListThatWasCreatedWithAnElementIsOne() {
+    assertEquals(1, List.of(1).count());
+  }
+  @Test void aListThatWasCreatedWithAnElementHasThatElement() {
     var element = 1;
     assertEquals(element, List.of(element).get(0));
   }
 
-  @Test void multiElementIsNotEmpty() { assertFalse(List.of(1, 2).isEmpty()); }
-  @Test void multiElementIsFinite() { assertTrue(List.of(1, 2).isFinite()); }
-  @Test void multiElementHasCorrectCount() {
+  @Test void aListThatWasCreatedWithElementsIsNotEmpty() {
+    assertFalse(List.of(1, 2).isEmpty());
+  }
+  @Test void aListThatWasCreatedWithElementsIsFinite() {
+    assertTrue(List.of(1, 2).isFinite());
+  }
+  @Test void
+    countOfAListThatWasCreatedWithElementsIsTheNumberOfThoseElements() {
     assertEquals(2, List.of(1, 2).count());
   }
-  @Test void multiElementHasElements() {
+  @Test void aListThatWasCreatedWithElementsHasThoseElements() {
     var elements = new int[] { 1, 2 };
     var list     = List.of(elements[0], elements[1]);
     assertEquals(elements[0], list.get(0));
     assertEquals(elements[1], list.get(1));
   }
 
-  @Test void newMutableIsEmpty() { assertTrue(List.mutable().isEmpty()); }
-  @Test void newMutableIsNotFinite() { assertFalse(List.mutable().isFinite()); }
-  @Test void newMutableHasZeroCount() {
+  @Test void aNewlyCreatedMutableListIsEmpty() {
+    assertTrue(List.mutable().isEmpty());
+  }
+  @Test void aNewlyCreatedMutableListIsNotFinite() {
+    assertFalse(List.mutable().isFinite());
+  }
+  @Test void countOfANewlyCreatedMutableListIsZero() {
     assertEquals(0, List.mutable().count());
   }
 
-  @Test void pushingToNewMutableMakesNotEmpty() {
+  @Test void pushingToANewlyCreatedMutableListMakesItNotEmpty() {
     var list = List.mutable();
     list.push(1);
     assertFalse(list.isEmpty());
   }
-  @Test void pushingToNewMutableMakesFinite() {
+  @Test void pushingToANewlyCreatedMutableListMakesItFinite() {
     var list = List.mutable();
     list.push(1);
     assertTrue(list.isFinite());
   }
-  @Test void pushingToNewMutableIncrementsCount() {
+  @Test void pushingToANewlyCreatedMutableListIncrementsItsCount() {
     var list = List.mutable();
     list.push(1);
     assertEquals(1, list.count());
   }
-  @Test void pushingToNewMutableInsertsElement() {
+  @Test void aNewlyCreatedAndPushedMutableListHasThePushedElementAtIndexZero() {
     var element = 1;
     var list    = List.mutable();
     list.push(element);
     assertEquals(element, list.get(0));
   }
 
-  @Test void pushingToFiniteDoesNotMakeEmpty() {
+  @Test void pushingToAListWithAnElementDoesNotMakeItEmpty() {
     var list = List.mutable();
     list.push(1);
     list.push(1);
     assertFalse(list.isEmpty());
   }
-  @Test void pushingToFiniteKeepsFinite() {
+  @Test void pushingToAListWithAnElementKeepsItFinite() {
     var list = List.mutable();
     list.push(1);
     list.push(1);
     assertTrue(list.isFinite());
   }
-  @Test void pushingToFiniteIncrementsCount() {
+  @Test void pushingToAListWithAnElementIncrementsItsCount() {
     var list = List.mutable();
     list.push(1);
     list.push(1);
     assertEquals(2, list.count());
   }
-  @Test void pushingToFiniteKeepsPreviousElement() {
+  @Test void pushingToAListWithAnElementKeepsThatElement() {
     var previousElement = 1;
     var list            = List.mutable();
     list.push(previousElement);
     list.push(2);
     assertEquals(previousElement, list.get(0));
   }
-  @Test void pushingToFiniteKeepsPreviousElements() {
+  @Test void pushingToAListWithElementsKeepsThoseElements() {
     var previousElements = new int[] { 1, 2 };
     var list             = List.mutable();
     list.push(previousElements[0]);
@@ -96,26 +117,26 @@ final class ListQA {
     assertEquals(previousElements[1], list.get(1));
   }
 
-  @Test void poppingFromSingleElementMakesEmpty() {
+  @Test void poppingFromAListWithAnElementMakesItEmpty() {
     var list = List.mutable();
     list.push(1);
     list.pop();
     assertTrue(list.isEmpty());
   }
-  @Test void poppingFromSingleElementMakesNotFinite() {
+  @Test void poppingFromAListWithAnElementMakesItNotFinite() {
     var list = List.mutable();
     list.push(1);
     list.pop();
     assertFalse(list.isFinite());
   }
 
-  @Test void poppingFromFiniteDecrementsCount() {
+  @Test void poppingFromAListDecrementsItsCount() {
     var list = List.mutable();
     list.push(1);
     list.pop();
     assertEquals(0, list.count());
   }
-  @Test void poppingCountManyFromFiniteMakesEmpty() {
+  @Test void poppingFromAListAsManyTimesAsItsCountMakesItEmpty() {
     var list = List.mutable();
     list.push(1);
     list.push(1);

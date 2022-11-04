@@ -12,13 +12,13 @@ import rainfall.launcher.Option;
 import rainfall.utility.List;
 
 final class LauncherQA {
-  @Test void hasCommand() {
+  @Test void aLauncherHasTheGivenCommand() {
     var command  = Command.check(List.of());
     var options  = Map.<Class<? extends Option>, Option>of();
     var launcher = Launcher.of(command, options);
     assertEquals(command, launcher.command());
   }
-  @Test void hasOptions() {
+  @Test void aLauncherHasTheGivenOptions() {
     var command  = Command.check(List.of());
     var options  = Map.<Class<? extends Option>, Option>of();
     var launcher = Launcher.of(command, options);

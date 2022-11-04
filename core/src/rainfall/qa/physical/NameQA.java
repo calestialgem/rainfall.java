@@ -8,37 +8,45 @@ import org.junit.jupiter.api.Test;
 import rainfall.physical.Name;
 
 final class NameQA {
-  @Test void deniesEmptyValue() {
+  @Test void cannotCreateANameThatIsEmpty() {
     assertEquals("error: Name cannot be empty!",
       Name.of("").error().toString());
   }
 
-  @Test void deniesLowercaseInitial() {
+  @Test void canCreateANameThatStartsWithAnUppercaseLetter() {
+    assertTrue(Name.of("A").isSuccess());
+  }
+  @Test void cannotCreateANameThatStartsWithALowercaseLetter() {
     assertEquals("error: Name must start with an uppercase English letter!",
       Name.of("a").error().toString());
   }
-  @Test void deniesDigitInitial() {
+  @Test void cannotCreateANameThatStartsWithADecimalDigit() {
     assertEquals("error: Name must start with an uppercase English letter!",
       Name.of("0").error().toString());
   }
-  @Test void acceptsUppercaseInitial() { assertTrue(Name.of("A").isSuccess()); }
-  @Test void deniesInvalidInitial() {
+  @Test void cannotCreateANameThatStartsWithAnInvalidCharacter() {
     assertEquals("""
       error: Name must start with an uppercase English letter!
       error: Name must solely consist of English letters and decimal digits!""",
       Name.of("_").error().toString());
   }
 
-  @Test void acceptsLowercaseBody() { assertTrue(Name.of("Aa").isSuccess()); }
-  @Test void acceptsDigitBody() { assertTrue(Name.of("A0").isSuccess()); }
-  @Test void acceptsUppercaseBody() { assertTrue(Name.of("AA").isSuccess()); }
-  @Test void deniesInvalidBody() {
+  @Test void canCreateANameThatContinuesWithAnUppercaseLetter() {
+    assertTrue(Name.of("AA").isSuccess());
+  }
+  @Test void canCreateANameThatContinuesWithALowercaseLetter() {
+    assertTrue(Name.of("Aa").isSuccess());
+  }
+  @Test void canCreateANameThatContinuesWithADecimalDigit() {
+    assertTrue(Name.of("A0").isSuccess());
+  }
+  @Test void cannotCreateANameThatContinuesWithAnInvalidCharacter() {
     assertEquals(
       "error: Name must solely consist of English letters and decimal digits!",
       Name.of("A_").error().toString());
   }
 
-  @Test void acceptedHasValue() {
+  @Test void aNameHasTheGivenValue() {
     var value = "A";
     assertEquals(value, Name.of(value).value().value());
   }

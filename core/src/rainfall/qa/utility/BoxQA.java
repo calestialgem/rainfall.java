@@ -10,15 +10,15 @@ import org.junit.jupiter.api.Test;
 import rainfall.utility.Box;
 
 final class BoxQA {
-  @Test void emptyIsEmpty() { assertTrue(Box.empty().isEmpty()); }
-  @Test void emptyIsNotFull() { assertFalse(Box.empty().isFull()); }
-  @Test void emptyDoesNotHaveValue() {
+  @Test void anEmptyBoxIsEmpty() { assertTrue(Box.empty().isEmpty()); }
+  @Test void anEmptyBoxIsNotFull() { assertFalse(Box.empty().isFull()); }
+  @Test void anEmptyBoxThrowsWhenItsValueIsAccessed() {
     assertThrows(UnsupportedOperationException.class, Box.empty()::value);
   }
 
-  @Test void fullIsNotEmpty() { assertFalse(Box.full(1).isEmpty()); }
-  @Test void fullIsFull() { assertTrue(Box.full(1).isFull()); }
-  @Test void fullHasValue() {
+  @Test void aFullBoxIsNotEmpty() { assertFalse(Box.full(1).isEmpty()); }
+  @Test void aFullBoxIsFull() { assertTrue(Box.full(1).isFull()); }
+  @Test void aFullBoxHasTheGivenValue() {
     var value = 1;
     assertEquals(value, Box.full(value).value());
   }
