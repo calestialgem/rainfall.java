@@ -1,4 +1,4 @@
-package rainfall;
+package rainfall.utility;
 
 public sealed abstract class Box<Value> {
   public static <Value> Box<Value> empty() { return new Empty<>(); }

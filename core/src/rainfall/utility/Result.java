@@ -1,4 +1,4 @@
-package rainfall;
+package rainfall.utility;
 
 public sealed abstract class Result<Value, Error> {
   public static <Value, Error> Result<Value, Error> failure(Error error) {

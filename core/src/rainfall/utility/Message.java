@@ -1,4 +1,4 @@
-package rainfall;
+package rainfall.utility;
 
 public sealed abstract class Message {
   public static <Value> Result<Value, Message> failure(String body,

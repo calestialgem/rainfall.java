@@ -1,4 +1,4 @@
-package rainfall;
+package rainfall.utility;
 
 public sealed abstract class Map<Key, Value> {
   public abstract boolean isEmpty();

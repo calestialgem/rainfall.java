@@ -3,8 +3,8 @@ package rainfall.launcher;
 import java.nio.file.Path;
 import java.util.Map;
 
-import rainfall.Message;
-import rainfall.Result;
+import rainfall.utility.Message;
+import rainfall.utility.Result;
 
 public sealed abstract class Option {
   public static final class Directory extends Option {

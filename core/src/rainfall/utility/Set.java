@@ -1,4 +1,4 @@
-package rainfall;
+package rainfall.utility;
 
 public sealed abstract class Set<Element> {
   public static final class Mutable<Element> extends Set<Element> {

@@ -1,4 +1,4 @@
-package rainfall.test;
+package rainfall.qa.utility;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -7,9 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import rainfall.Result;
+import rainfall.utility.Result;
 
-final class ResultTest {
+final class ResultQA {
   @Test void failureIsFailure() { assertTrue(Result.failure(1).isFailure()); }
   @Test void failureIsNotSuccess() {
     assertFalse(Result.failure(1).isSuccess());

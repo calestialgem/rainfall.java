@@ -1,4 +1,4 @@
-package rainfall.test;
+package rainfall.qa.utility;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import rainfall.List;
+import rainfall.utility.List;
 
-final class ListTest {
+final class ListQA {
   @Test void emptyIsEmpty() { assertTrue(List.of().isEmpty()); }
   @Test void emptyIsNotFinite() { assertFalse(List.of().isFinite()); }
   @Test void emptyHasZeroCount() { assertEquals(0, List.of().count()); }

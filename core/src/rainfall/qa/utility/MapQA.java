@@ -1,4 +1,4 @@
-package rainfall.test;
+package rainfall.qa.utility;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -7,9 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
-import rainfall.Map;
+import rainfall.utility.Map;
 
-final class MapTest {
+final class MapQA {
   @Test void anEntryThatIsCreatedHasTheGivenKey() {
     var key = 1;
     assertEquals(key, Map.entry(key, 1).key());

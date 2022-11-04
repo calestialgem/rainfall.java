@@ -1,4 +1,4 @@
-package rainfall.test;
+package rainfall.qa.launcher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -6,12 +6,12 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import rainfall.List;
 import rainfall.launcher.Command;
 import rainfall.launcher.Launcher;
 import rainfall.launcher.Option;
+import rainfall.utility.List;
 
-final class LauncherTest {
+final class LauncherQA {
   @Test void hasCommand() {
     var command  = Command.check(List.of());
     var options  = Map.<Class<? extends Option>, Option>of();

@@ -1,10 +1,14 @@
-package rainfall;
+package rainfall.physical;
 
-public final class PhysicalName {
+import rainfall.utility.List;
+import rainfall.utility.Message;
+import rainfall.utility.Result;
+
+public final class Name {
   private final String value;
-  private PhysicalName(String value) { this.value = value; }
+  private Name(String value) { this.value = value; }
 
-  public static Result<PhysicalName, Message> of(String value) {
+  public static Result<Name, Message> of(String value) {
     var asASCII = value.getBytes();
     if (asASCII.length == 0) {
       return Message.failure("Name cannot be empty!");
@@ -24,7 +28,7 @@ public final class PhysicalName {
     if (errorMessages.isFinite()) {
       return Result.failure(Message.group(errorMessages));
     }
-    return Result.success(new PhysicalName(value));
+    return Result.success(new Name(value));
   }
 
   public String value() { return value; }

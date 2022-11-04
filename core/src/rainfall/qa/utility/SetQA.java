@@ -1,4 +1,4 @@
-package rainfall.test;
+package rainfall.qa.utility;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import rainfall.Set;
+import rainfall.utility.Set;
 
-final class SetTest {
+final class SetQA {
   @Test void aSetThatIsCreatedWithoutElementsIsEmpty() {
     assertTrue(Set.of().isEmpty());
   }

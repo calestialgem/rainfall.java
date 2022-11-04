@@ -1,4 +1,4 @@
-package rainfall.test;
+package rainfall.qa.launcher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import rainfall.launcher.Option;
 
-final class OptionTest {
+final class OptionQA {
   @Test void directoryHasPath() {
     var path = Path.of(".");
     assertEquals(path, Option.directory(path).path());

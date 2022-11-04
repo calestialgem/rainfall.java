@@ -1,4 +1,4 @@
-package rainfall.test;
+package rainfall.qa.utility;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -6,10 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import rainfall.List;
-import rainfall.Message;
+import rainfall.utility.List;
+import rainfall.utility.Message;
 
-final class MessageTest {
+final class MessageQA {
   @Test void failureIsResult() { assertTrue(Message.failure("").isFailure()); }
   @Test void failureIsError() {
     assertEquals("error: ", Message.failure("").error().toString());

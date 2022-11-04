@@ -1,4 +1,4 @@
-package rainfall;
+package rainfall.utility;
 
 public sealed abstract class List<Element> {
   @SafeVarargs public static <Element> List<Element> of(Element... elements) {

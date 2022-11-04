@@ -1,4 +1,4 @@
-package rainfall.test;
+package rainfall.qa.utility;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -7,9 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import rainfall.Box;
+import rainfall.utility.Box;
 
-final class BoxTest {
+final class BoxQA {
   @Test void emptyIsEmpty() { assertTrue(Box.empty().isEmpty()); }
   @Test void emptyIsNotFull() { assertFalse(Box.empty().isFull()); }
   @Test void emptyDoesNotHaveValue() {

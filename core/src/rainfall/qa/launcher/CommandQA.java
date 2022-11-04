@@ -1,17 +1,17 @@
-package rainfall.test;
+package rainfall.qa.launcher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import rainfall.List;
-import rainfall.PhysicalName;
 import rainfall.launcher.Command;
+import rainfall.physical.Name;
+import rainfall.utility.List;
 
-final class CommandTest {
+final class CommandQA {
   @Test void newHasName() {
-    var created = PhysicalName.of("A").value();
+    var created = Name.of("A").value();
     assertEquals(created, Command.new_(created).created());
   }
 
@@ -19,8 +19,7 @@ final class CommandTest {
     assertTrue(Command.check(List.of()).checked().isEmpty());
   }
   @Test void checkHasChecked() {
-    var checked =
-      List.of(PhysicalName.of("A").value(), PhysicalName.of("B").value());
+    var checked = List.of(Name.of("A").value(), Name.of("B").value());
     assertEquals(checked, Command.check(checked).checked());
   }
 
@@ -28,27 +27,24 @@ final class CommandTest {
     assertTrue(Command.test(List.of()).tested().isEmpty());
   }
   @Test void testHasTested() {
-    var tested =
-      List.of(PhysicalName.of("A").value(), PhysicalName.of("B").value());
+    var tested = List.of(Name.of("A").value(), Name.of("B").value());
     assertEquals(tested, Command.test(tested).tested());
   }
 
   @Test void buildHasName() {
-    var built = PhysicalName.of("A").value();
+    var built = Name.of("A").value();
     assertEquals(built, Command.build(built).built());
   }
 
   @Test void runHasName() {
-    var run = PhysicalName.of("A").value();
+    var run = Name.of("A").value();
     assertEquals(run, Command.run(run, List.of()).run());
   }
   @Test void runHasEmptyPassed() {
-    assertTrue(
-      Command.run(PhysicalName.of("A").value(), List.of()).passed().isEmpty());
+    assertTrue(Command.run(Name.of("A").value(), List.of()).passed().isEmpty());
   }
   @Test void runHasPassed() {
     var passed = List.of("a", "b");
-    assertEquals(passed,
-      Command.run(PhysicalName.of("A").value(), passed).passed());
+    assertEquals(passed, Command.run(Name.of("A").value(), passed).passed());
   }
 }
