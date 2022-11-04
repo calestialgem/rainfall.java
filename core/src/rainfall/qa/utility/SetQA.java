@@ -3,6 +3,8 @@ package rainfall.qa.utility;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import org.junit.jupiter.api.Test;
 
@@ -22,6 +24,13 @@ final class SetQA {
     assertFalse(Set.of().contains(1));
     assertFalse(Set.of().contains(2));
   }
+  @Test void aSetThatIsCreatedWithoutElementsWhenAskedWithAnElementThrows() {
+    assertThrows(UnsupportedOperationException.class, () -> Set.of().get(1));
+  }
+  @Test void
+    aSetThatIsCreatedWithoutElementsWhenAccessedWithAnElementReturnsEmptyBox() {
+    assertTrue(Set.of().access(1).isEmpty());
+  }
 
   @Test void aSetThatIsCreatedWithAnElementIsNotEmpty() {
     assertFalse(Set.of(1).isEmpty());
@@ -35,6 +44,54 @@ final class SetQA {
   @Test void aSetThatIsCreatedWithAnElementContainsThatElement() {
     var element = 1;
     assertTrue(Set.of(element).contains(element));
+  }
+  @Test void
+    aSetThatIsCreatedWithAnElementWhenAskedWithAnEqualElementReturnsThatElement() {
+    final class Element {
+      private final int a;
+      private Element(int a) { this.a = a; }
+      @Override public int hashCode() { return a; }
+      @Override public boolean equals(Object obj) {
+        if (this == obj) { return true; }
+        if (!(obj instanceof Element element)) { return false; }
+        return a == element.a;
+      }
+    }
+    var element      = new Element(1);
+    var equalElement = new Element(1);
+    assertSame(element, Set.of(element).get(equalElement));
+  }
+  @Test void
+    aSetThatIsCreatedWithAnElementWhenAccessedWithAnEqualElementReturnsFullBox() {
+    final class Element {
+      private final int a;
+      private Element(int a) { this.a = a; }
+      @Override public int hashCode() { return a; }
+      @Override public boolean equals(Object obj) {
+        if (this == obj) { return true; }
+        if (!(obj instanceof Element element)) { return false; }
+        return a == element.a;
+      }
+    }
+    var element      = new Element(1);
+    var equalElement = new Element(1);
+    assertTrue(Set.of(element).access(equalElement).isFull());
+  }
+  @Test void
+    aSetThatIsCreatedWithAnElementWhenAccessedWithAnEqualElementReturnsThatElement() {
+      final class Element {
+        private final int a;
+        private Element(int a) { this.a = a; }
+        @Override public int hashCode() { return a; }
+        @Override public boolean equals(Object obj) {
+          if (this == obj) { return true; }
+          if (!(obj instanceof Element element)) { return false; }
+          return a == element.a;
+        }
+      }
+      var element      = new Element(1);
+      var equalElement = new Element(1);
+      assertSame(element, Set.of(element).access(equalElement).value());
   }
   @Test void aSetThatIsCreatedWithAnElementDoesNotContainUnspecifiedElements() {
     var set = Set.of(1);

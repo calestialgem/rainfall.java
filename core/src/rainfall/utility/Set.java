@@ -16,10 +16,29 @@ public sealed abstract class Set<Element> {
       var start = element.hashCode();
       for (var index = 0; index < buckets.length; index++) {
         var bucket = buckets[(start + index) % buckets.length];
-        if (bucket.isEmpty()) { return false; }
+        if (bucket.isEmpty()) { break; }
         if (bucket.value().equals(element)) { return true; }
       }
       return false;
+    }
+    @Override public Element get(Element element) {
+      var start = element.hashCode();
+      for (var index = 0; index < buckets.length; index++) {
+        var bucket = buckets[(start + index) % buckets.length];
+        if (bucket.isEmpty()) { break; }
+        if (bucket.value().equals(element)) { return bucket.value(); }
+      }
+      throw new UnsupportedOperationException(
+        "Set does not contain the given element!");
+    }
+    @Override public Box<Element> access(Element element) {
+      var start = element.hashCode();
+      for (var index = 0; index < buckets.length; index++) {
+        var bucket = buckets[(start + index) % buckets.length];
+        if (bucket.isEmpty()) { break; }
+        if (bucket.value().equals(element)) { return bucket; }
+      }
+      return Box.empty();
     }
 
     public void push(Element element) {
@@ -65,6 +84,8 @@ public sealed abstract class Set<Element> {
   public abstract boolean isFinite();
   public abstract int count();
   public abstract boolean contains(Element element);
+  public abstract Element get(Element element);
+  public abstract Box<Element> access(Element element);
 
   private static final class Persistent<Element> extends Set<Element> {
     private final Mutable<Element> underlying;
@@ -77,6 +98,12 @@ public sealed abstract class Set<Element> {
     @Override public int count() { return underlying.count(); }
     @Override public boolean contains(Element element) {
       return underlying.contains(element);
+    }
+    @Override public Element get(Element element) {
+      return underlying.get(element);
+    }
+    @Override public Box<Element> access(Element element) {
+      return underlying.access(element);
     }
   }
 
