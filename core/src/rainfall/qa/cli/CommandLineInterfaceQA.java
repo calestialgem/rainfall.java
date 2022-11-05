@@ -78,8 +78,8 @@ final class CommandLineInterfaceQA {
     parsingANewCommandWithAValidPackageNameResultsInANewCommandWithTheGivenPackageName() {
     var name = "Package";
     assertEquals(name,
-      ((Command.New) CommandLineInterface.parse("new", name).value()).created()
-        .value());
+      ((Command.New) CommandLineInterface.parse("new", name).value().command())
+        .created().value());
   }
 
   @Test void parsingANewCommandShortcutWithoutAPackageNameFails() {
@@ -131,8 +131,8 @@ final class CommandLineInterfaceQA {
     parsingANewCommandShortcutWithAValidPackageNameResultsInANewCommandWithTheGivenPackageName() {
     var name = "Package";
     assertEquals(name,
-      ((Command.New) CommandLineInterface.parse("n", name).value()).created()
-        .value());
+      ((Command.New) CommandLineInterface.parse("n", name).value().command())
+        .created().value());
   }
 
   @Test void parsingACheckCommandWithoutAPackageNameSucceeds() {
@@ -140,8 +140,9 @@ final class CommandLineInterfaceQA {
   }
   @Test void
     parsingACheckCommandWithoutAPackageNameResultsInACheckCommandWithEmptyCheckedPackagesList() {
-    assertTrue(((Command.Check) CommandLineInterface.parse("check").value())
-      .checked().isEmpty());
+    assertTrue(
+      ((Command.Check) CommandLineInterface.parse("check").value().command())
+        .checked().isEmpty());
   }
   @Test void parsingACheckCommandWithAnInvalidPackageNameFails() {
     assertTrue(CommandLineInterface.parse("check", "package").isFailure());
@@ -175,7 +176,7 @@ final class CommandLineInterfaceQA {
     var names = List.of("FirstPackage", "SecondPackage");
     assertEquals(names.toString(),
       ((Command.Check) CommandLineInterface
-        .parse("check", names.get(0), names.get(1)).value()).checked()
+        .parse("check", names.get(0), names.get(1)).value().command()).checked()
         .toString());
   }
 }
