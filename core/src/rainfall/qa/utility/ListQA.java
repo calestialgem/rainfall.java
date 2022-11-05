@@ -143,4 +143,31 @@ final class ListQA {
     for (var i = list.count(); i > 0; i--) { list.pop(); }
     assertTrue(list.isEmpty());
   }
+
+  @Test void listsWithAnEqualElementAreEqual() {
+    assertEquals(List.of(1), List.of(1));
+  }
+  @Test void listsWithEqualElementsAreEqual() {
+    assertEquals(List.of(1, 2), List.of(1, 2));
+  }
+  @Test void mutableAndImmutableListsWithEqualElementsAreEqual() {
+    var elements = new int[] { 1, 2 };
+    var mutable  = List.mutable();
+    mutable.push(elements[0]);
+    mutable.push(elements[1]);
+    assertEquals(List.of(elements[0], elements[1]), mutable);
+  }
+
+  @Test void anEmptyListIsStringifiedCorrectly() {
+    assertEquals("[]", List.of().toString());
+  }
+  @Test void aListWithASingleElementIsStringifiedCorrectly() {
+    var element = 1;
+    assertEquals("[%s]".formatted(element), List.of(element).toString());
+  }
+  @Test void aListWithElementsIsStringifiedCorrectly() {
+    var elements = new int[] { 1, 2 };
+    assertEquals("[%s,%s]".formatted(elements[0], elements[1]),
+      List.of(elements[0], elements[1]).toString());
+  }
 }

@@ -12,6 +12,39 @@ public sealed abstract class List<Element> {
   public abstract int count();
   public abstract Element get(int index);
 
+  @Override public boolean equals(Object obj) {
+    if (this == obj) { return true; }
+    if (!(obj instanceof List list)) { return false; }
+    if (count() != list.count()) { return false; }
+    for (var element = 0; element < count(); element++) {
+      if (!get(element).equals(list.get(element))) { return false; }
+    }
+    return true;
+  }
+
+  @Override public int hashCode() {
+    if (isEmpty()) { return 0; }
+    var result = 1;
+    var prime  = 31;
+    for (var element = 0; element < count(); element++) {
+      result *= prime;
+      result += get(element).hashCode();
+    }
+    return result;
+  }
+
+  @Override public String toString() {
+    var builder = new StringBuilder();
+    builder.append('[');
+    if (isFinite()) { builder.append(get(0)); }
+    for (var element = 1; element < count(); element++) {
+      builder.append(',');
+      builder.append(get(element));
+    }
+    builder.append(']');
+    return builder.toString();
+  }
+
   private static final class Array<Element> extends List<Element> {
     private final Element[] elements;
     private Array(Element[] elements) { this.elements = elements; }
