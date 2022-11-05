@@ -1,6 +1,6 @@
 package rainfall.launcher;
 
-import java.util.Map;
+import rainfall.utility.Map;
 
 public final class Launcher {
   private final Command                              command;

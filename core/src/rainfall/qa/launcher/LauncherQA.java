@@ -2,14 +2,13 @@ package rainfall.qa.launcher;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Map;
-
 import org.junit.jupiter.api.Test;
 
 import rainfall.launcher.Command;
 import rainfall.launcher.Launcher;
 import rainfall.launcher.Option;
 import rainfall.utility.List;
+import rainfall.utility.Map;
 
 final class LauncherQA {
   @Test void aLauncherHasTheGivenCommand() {
