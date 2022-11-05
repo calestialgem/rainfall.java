@@ -50,4 +50,9 @@ final class NameQA {
     var value = "A";
     assertEquals(value, Name.of(value).value().value());
   }
+
+  @Test void aNameStringifiedAsItsValue() {
+    var value = "A";
+    assertEquals(value, Name.of(value).value().toString());
+  }
 }
