@@ -173,7 +173,9 @@ final class CommandLineInterfaceQA {
   @Test void
     parsingACheckCommandWithValidPackageNamesResultsInACheckCommandWithTheGivenPackageNames() {
     var names = List.of("FirstPackage", "SecondPackage");
-    assertEquals(names, ((Command.Check) CommandLineInterface
-      .parse("check", names.get(0), names.get(1)).value()).checked());
+    assertEquals(names.toString(),
+      ((Command.Check) CommandLineInterface
+        .parse("check", names.get(0), names.get(1)).value()).checked()
+        .toString());
   }
 }
