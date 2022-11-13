@@ -2,7 +2,7 @@ package rainfall.utility;
 
 import java.util.Iterator;
 
-public interface Sequence<Value> extends Iterable<Value> {
+public interface Sequence<Value> extends Iterator<Value> {
   boolean continues();
   Value value();
   void advance();
@@ -13,7 +13,6 @@ public interface Sequence<Value> extends Iterable<Value> {
     return value;
   }
 
-  @Override default Iterator<Value> iterator() {
-    return SequenceIterator.iterator(this);
-  }
+  @Override public default boolean hasNext() { return continues(); }
+  @Override public default Value next() { return take(); }
 }
