@@ -16,9 +16,7 @@ public sealed abstract class List<Element> implements Iterable<Element> {
   public abstract int count();
   public abstract Element element(int index);
 
-  @Override public Sequence<Element> iterator() {
-    return ForwardSequence.start(this);
-  }
+  @Override public abstract Sequence<Element> iterator();
 
   @Override public String toString() {
     var buffer = new StringBuilder();
@@ -66,6 +64,10 @@ public sealed abstract class List<Element> implements Iterable<Element> {
     @Override public int count() { return used; }
     @Override public Element element(int index) { return buffer[index]; }
 
+    @Override public Sequence<Element> iterator() {
+      return ForwardSequence.start(buffer);
+    }
+
     @SuppressWarnings("unchecked") public void push(Element pushed) {
       if (used == buffer.length) {
         var grownCapacity = Math.max(1, buffer.length * 2);
@@ -76,24 +78,5 @@ public sealed abstract class List<Element> implements Iterable<Element> {
       buffer[used++] = pushed;
     }
     public Element pop() { return buffer[--used]; }
-  }
-
-  private static final class ForwardSequence<Element>
-    implements Sequence<Element> {
-    private final List<Element> list;
-    private int                 index;
-    private ForwardSequence(List<Element> list, int index) {
-      this.list  = list;
-      this.index = index;
-    }
-
-    private static <Element> ForwardSequence<Element>
-      start(List<Element> list) {
-      return new ForwardSequence<>(list, 0);
-    }
-
-    @Override public boolean continues() { return index < list.count(); }
-    @Override public Element value() { return list.element(index); }
-    @Override public void advance() { index++; }
   }
 }
