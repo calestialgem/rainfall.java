@@ -1,6 +1,6 @@
 package rainfall;
 
-final class Lexeme {
+record Lexeme(Type type, Portion portion) {
   static enum Type {
     // Deliminator
     OPENING_PARENTHESIS, CLOSING_PARENTHESIS, OPENING_BRACE, CLOSING_BRACE,
@@ -44,12 +44,5 @@ final class Lexeme {
 
     // Other
     IDENTIFIER, DECIMAL_LITERAL;
-  }
-
-  private final Type    type;
-  private final Portion portion;
-  private Lexeme(Type type, Portion portion) {
-    this.type    = type;
-    this.portion = portion;
   }
 }
