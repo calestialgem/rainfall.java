@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 final class Lexer {
   static Workspace<Lexical> lex(Workspace<Linear> lexed) {
@@ -52,81 +51,6 @@ final class Lexer {
       new Lexer(lexed.model()).lex());
   }
 
-  private static final Map<UTF8, Lexeme.Type> MARKS =
-    Map.ofEntries(Map.entry(UTF8.from("("), Lexeme.Type.OPENING_PARENTHESIS),
-      Map.entry(UTF8.from(")"), Lexeme.Type.CLOSING_PARENTHESIS),
-      Map.entry(UTF8.from("{"), Lexeme.Type.OPENING_BRACE),
-      Map.entry(UTF8.from("}"), Lexeme.Type.CLOSING_BRACE),
-      Map.entry(UTF8.from("["), Lexeme.Type.OPENING_BRACKET),
-      Map.entry(UTF8.from("]"), Lexeme.Type.CLOSING_BRACKET),
-      Map.entry(UTF8.from("'"), Lexeme.Type.PRIME),
-      Map.entry(UTF8.from("\""), Lexeme.Type.QUOTE),
-      Map.entry(UTF8.from("`"), Lexeme.Type.BACKTICK),
-      Map.entry(UTF8.from("^="), Lexeme.Type.CARET_EQUALS),
-      Map.entry(UTF8.from("^"), Lexeme.Type.CARET),
-      Map.entry(UTF8.from("*="), Lexeme.Type.STAR_EQUALS),
-      Map.entry(UTF8.from("*"), Lexeme.Type.STAR),
-      Map.entry(UTF8.from("/="), Lexeme.Type.SLASH_EQUALS),
-      Map.entry(UTF8.from("/"), Lexeme.Type.SLASH),
-      Map.entry(UTF8.from("+="), Lexeme.Type.PLUS_EQUALS),
-      Map.entry(UTF8.from("+"), Lexeme.Type.PLUS),
-      Map.entry(UTF8.from("-="), Lexeme.Type.MINUS_EQUALS),
-      Map.entry(UTF8.from("-"), Lexeme.Type.MINUS),
-      Map.entry(UTF8.from("&="), Lexeme.Type.AMPERSAND_EQUALS),
-      Map.entry(UTF8.from("&"), Lexeme.Type.AMPERSAND),
-      Map.entry(UTF8.from("|="), Lexeme.Type.PIPE_EQUALS),
-      Map.entry(UTF8.from("|"), Lexeme.Type.PIPE),
-      Map.entry(UTF8.from("!"), Lexeme.Type.EXCLAMATION),
-      Map.entry(UTF8.from("<="), Lexeme.Type.LEFT_ARROW_EQUALS),
-      Map.entry(UTF8.from("<"), Lexeme.Type.LEFT_ARROW),
-      Map.entry(UTF8.from(">="), Lexeme.Type.RIGHT_ARROW_EQUALS),
-      Map.entry(UTF8.from(">"), Lexeme.Type.RIGHT_ARROW),
-      Map.entry(UTF8.from("!="), Lexeme.Type.EXCLAMATION_EQUALS),
-      Map.entry(UTF8.from("=="), Lexeme.Type.EQUALS_EQUALS),
-      Map.entry(UTF8.from("$"), Lexeme.Type.DOLLAR),
-      Map.entry(UTF8.from("~"), Lexeme.Type.TILDE),
-      Map.entry(UTF8.from("."), Lexeme.Type.DOT),
-      Map.entry(UTF8.from("="), Lexeme.Type.DOLLAR),
-      Map.entry(UTF8.from(","), Lexeme.Type.COMMA),
-      Map.entry(UTF8.from(":"), Lexeme.Type.COLON),
-      Map.entry(UTF8.from(";"), Lexeme.Type.SEMICOLON),
-      Map.entry(UTF8.from("@"), Lexeme.Type.AT));
-
-  private static final Map<UTF8, Lexeme.Type> KEYWORDS =
-    Map.ofEntries(Map.entry(UTF8.from("private"), Lexeme.Type.PRIVATE),
-      Map.entry(UTF8.from("protected"), Lexeme.Type.PROTECTED),
-      Map.entry(UTF8.from("public"), Lexeme.Type.PUBLIC),
-      Map.entry(UTF8.from("import"), Lexeme.Type.IMPORT),
-      Map.entry(UTF8.from("const"), Lexeme.Type.CONST),
-      Map.entry(UTF8.from("var"), Lexeme.Type.VAR),
-      Map.entry(UTF8.from("func"), Lexeme.Type.FUNC),
-      Map.entry(UTF8.from("proc"), Lexeme.Type.PROC),
-      Map.entry(UTF8.from("entrypoint"), Lexeme.Type.ENTRYPOINT),
-      Map.entry(UTF8.from("interface"), Lexeme.Type.INTERFACE),
-      Map.entry(UTF8.from("struct"), Lexeme.Type.STRUCT),
-      Map.entry(UTF8.from("class"), Lexeme.Type.CLASS),
-      Map.entry(UTF8.from("enum"), Lexeme.Type.ENUM),
-      Map.entry(UTF8.from("union"), Lexeme.Type.UNION),
-      Map.entry(UTF8.from("variant"), Lexeme.Type.VARIANT),
-      Map.entry(UTF8.from("if"), Lexeme.Type.IF),
-      Map.entry(UTF8.from("else"), Lexeme.Type.ELSE),
-      Map.entry(UTF8.from("for"), Lexeme.Type.FOR),
-      Map.entry(UTF8.from("while"), Lexeme.Type.WHILE),
-      Map.entry(UTF8.from("do"), Lexeme.Type.DO),
-      Map.entry(UTF8.from("switch"), Lexeme.Type.SWITCH),
-      Map.entry(UTF8.from("case"), Lexeme.Type.CASE),
-      Map.entry(UTF8.from("default"), Lexeme.Type.DEFAULT),
-      Map.entry(UTF8.from("fallthrough"), Lexeme.Type.FALLTHROUGH),
-      Map.entry(UTF8.from("break"), Lexeme.Type.BREAK),
-      Map.entry(UTF8.from("continue"), Lexeme.Type.CONTINUE),
-      Map.entry(UTF8.from("return"), Lexeme.Type.RETURN),
-      Map.entry(UTF8.from("free"), Lexeme.Type.FREE),
-      Map.entry(UTF8.from("mutable"), Lexeme.Type.MUTABLE),
-      Map.entry(UTF8.from("shared"), Lexeme.Type.SHARED),
-      Map.entry(UTF8.from("volatile"), Lexeme.Type.VOLATILE),
-      Map.entry(UTF8.from("alignas"), Lexeme.Type.ALIGNAS),
-      Map.entry(UTF8.from("threadlocal"), Lexeme.Type.THREADLOCAL));
-
   private final Linear lexed;
   private int          nextCharacter;
   private List<Lexeme> lex;
@@ -162,9 +86,9 @@ final class Lexer {
 
   private boolean lexMark() {
     var startCharacter = nextCharacter;
-    for (var markString : MARKS.keySet()) {
+    for (var markString : Lexeme.MARKS.keySet()) {
       if (takeString(markString)) {
-        addLexeme(MARKS.get(markString), startCharacter);
+        addLexeme(Lexeme.MARKS.get(markString), startCharacter);
         return true;
       }
     }
@@ -233,13 +157,13 @@ final class Lexer {
     while (takeAlphabetic()) {}
 
     var initialPortion = getPortion(startCharacter).contents();
-    if (!KEYWORDS.containsKey(initialPortion)) {
+    if (!Lexeme.KEYWORDS.containsKey(initialPortion)) {
       addLexeme(Lexeme.Type.IDENTIFIER, startCharacter);
     } else {
       if (takeCharacter('_')) {
         addLexeme(Lexeme.Type.IDENTIFIER, startCharacter);
       } else {
-        addLexeme(KEYWORDS.get(initialPortion), startCharacter);
+        addLexeme(Lexeme.KEYWORDS.get(initialPortion), startCharacter);
       }
     }
 
