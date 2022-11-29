@@ -1,11 +1,56 @@
 package rainfall;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 final class Lexer {
-  static List<Lexeme> lex(Source lexed) { return new Lexer(lexed).lex(); }
+  static Workspace<Lexical> lex(Workspace<Linear> lexed) {
+    var packages = new HashMap<UTF8, Package<Lexical>>();
+    for (var package_ : lexed.packages().entrySet()) {
+      packages.put(package_.getKey(), lex(package_.getValue()));
+    }
+    return new Workspace<>(Collections.unmodifiableMap(packages));
+  }
+
+  private static Package<Lexical> lex(Package<Linear> lexed) {
+    return switch (lexed) {
+    case Package.Directory<Linear> directory -> lex(directory);
+    case Package.File<Linear> file -> lex(file);
+    };
+  }
+
+  private static Package.Directory<Lexical>
+    lex(Package.Directory<Linear> lexed) {
+    return new Package.Directory<>(lex(lexed.module()));
+  }
+
+  private static Package.File<Lexical> lex(Package.File<Linear> lexed) {
+    return new Package.File<>(lex(lexed.source()));
+  }
+
+  private static Module<Lexical> lex(Module<Linear> lexed) {
+    var sources = new HashMap<UTF8, Source<Lexical>>();
+    for (var source : lexed.sources().entrySet()) {
+      sources.put(source.getKey(), lex(source.getValue()));
+    }
+
+    var submodules = new HashMap<UTF8, Module<Lexical>>();
+    for (var submodule : lexed.submodules().entrySet()) {
+      submodules.put(submodule.getKey(), lex(submodule.getValue()));
+    }
+
+    return new Module<>(lexed.path(), lexed.name(),
+      Collections.unmodifiableMap(sources),
+      Collections.unmodifiableMap(submodules));
+  }
+
+  private static Source<Lexical> lex(Source<Linear> lexed) {
+    return new Source<Lexical>(lexed.path(), lexed.name(),
+      new Lexer(lexed.model()).lex());
+  }
 
   private static final Map<UTF8, Lexeme.Type> MARKS =
     Map.ofEntries(Map.entry(UTF8.from("("), Lexeme.Type.OPENING_PARENTHESIS),
@@ -82,26 +127,26 @@ final class Lexer {
       Map.entry(UTF8.from("alignas"), Lexeme.Type.ALIGNAS),
       Map.entry(UTF8.from("threadlocal"), Lexeme.Type.THREADLOCAL));
 
-  private final Source lexed;
+  private final Linear lexed;
   private int          nextCharacter;
   private List<Lexeme> lex;
 
-  private Lexer(Source lexed) {
+  private Lexer(Linear lexed) {
     this.lexed    = lexed;
     nextCharacter = 0;
     lex           = new ArrayList<>();
   }
 
-  private List<Lexeme> lex() {
+  private Lexical lex() {
     while (nextCharacter < lexed.contents().length()) {
       if (skip() || lexMark() || lexCharacterLiteral() || lexStringLiteral()
         || lexRawStringLiteral() || lexDecimalLiteral() || lexWord()) continue;
       lex.add(new Lexeme(Lexeme.Type.UNKNOWN,
-        Portion.at(lexed, nextCharacter, nextCharacter + 1)));
+        Portion.at(lexed.contents(), nextCharacter, nextCharacter + 1)));
       nextCharacter++;
     }
 
-    return lex;
+    return new Lexical(Collections.unmodifiableList(lex));
   }
 
   private boolean skip() { return skipWhitespace() || skipComments(); }
@@ -256,7 +301,7 @@ final class Lexer {
   }
 
   private Portion getPortion(int startCharacter) {
-    return Portion.at(lexed, startCharacter, nextCharacter);
+    return Portion.at(lexed.contents(), startCharacter, nextCharacter);
   }
 
   private int getNext() { return lexed.contents().codepoint(nextCharacter); }

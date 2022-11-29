@@ -1,3 +1,5 @@
 package rainfall;
 
-record Source(UTF8 path, UTF8 contents) {}
+import java.nio.file.Path;
+
+record Source<Model>(Path path, UTF8 name, Model model) {}
