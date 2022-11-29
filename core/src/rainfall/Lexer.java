@@ -7,7 +7,7 @@ import java.util.List;
 
 final class Lexer {
   static Workspace<Lexical> lex(Workspace<Linear> lexed) {
-    var packages = new HashMap<Unicode, Package<Lexical>>();
+    var packages = new HashMap<String, Package<Lexical>>();
     for (var package_ : lexed.packages().entrySet()) {
       packages.put(package_.getKey(), lex(package_.getValue()));
     }
@@ -31,12 +31,12 @@ final class Lexer {
   }
 
   private static Module<Lexical> lex(Module<Linear> lexed) {
-    var sources = new HashMap<Unicode, Source<Lexical>>();
+    var sources = new HashMap<String, Source<Lexical>>();
     for (var source : lexed.sources().entrySet()) {
       sources.put(source.getKey(), lex(source.getValue()));
     }
 
-    var submodules = new HashMap<Unicode, Module<Lexical>>();
+    var submodules = new HashMap<String, Module<Lexical>>();
     for (var submodule : lexed.submodules().entrySet()) {
       submodules.put(submodule.getKey(), lex(submodule.getValue()));
     }
@@ -75,12 +75,12 @@ final class Lexer {
 
   private boolean skip() { return skipWhitespace() || skipComments(); }
 
-  private boolean skipWhitespace() { return takeCharacter(' '); }
+  private boolean skipWhitespace() { return takeAny(" \t\n"); }
 
   private boolean skipComments() {
     if (!takeCharacter('#')) return false;
     if (!takeCharacter('{')) while (!takeCharacter('\n')) nextCharacter++;
-    else while (!takeString(Unicode.from("}#"))) nextCharacter++;
+    else while (!takeString("}#")) nextCharacter++;
     return true;
   }
 
@@ -135,7 +135,7 @@ final class Lexer {
       }
     }
 
-    if (takeAny(Unicode.from("eE"))) {
+    if (takeAny("eE")) {
       if (!takeDecimalDigit()) throw new RuntimeException();
       while (takeDecimalDigit() || takeCharacter('_')) {}
     }
@@ -156,7 +156,7 @@ final class Lexer {
     if (!takeLowercaseLetter()) return false;
     while (takeAlphabetic()) {}
 
-    var initialPortion = getPortion(startCharacter).contents();
+    var initialPortion = getPortion(startCharacter).toString();
     if (!Lexeme.KEYWORDS.containsKey(initialPortion)) {
       addLexeme(Lexeme.Type.IDENTIFIER, startCharacter);
     } else {
@@ -176,14 +176,14 @@ final class Lexer {
       nextCharacter++;
       return;
     }
-    if (takeAny(Unicode.from("\\'\"`"))) return;
+    if (takeAny("\\'\"`")) return;
     int digitCount = 0;
     while (takeHexadecimalDigit()) { digitCount++; }
     if (digitCount == 0 || digitCount > 8) throw new RuntimeException();
   }
 
-  private boolean takeAny(Unicode alternatives) {
-    if (!alternatives.contains(getNext())) return false;
+  private boolean takeAny(String alternatives) {
+    if (alternatives.indexOf(getNext()) == -1) return false;
     nextCharacter++;
     return true;
   }
@@ -208,7 +208,7 @@ final class Lexer {
     return true;
   }
 
-  private boolean takeString(Unicode taken) {
+  private boolean takeString(String taken) {
     if (!lexed.contents().startsWith(taken, nextCharacter)) { return false; }
     nextCharacter += taken.length();
     return true;
@@ -228,5 +228,5 @@ final class Lexer {
     return Portion.at(lexed.contents(), startCharacter, nextCharacter - 1);
   }
 
-  private int getNext() { return lexed.contents().codepoint(nextCharacter); }
+  private int getNext() { return lexed.contents().charAt(nextCharacter); }
 }

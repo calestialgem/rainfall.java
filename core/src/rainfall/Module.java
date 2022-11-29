@@ -3,6 +3,5 @@ package rainfall;
 import java.nio.file.Path;
 import java.util.Map;
 
-record Module<Model>(Path path, Unicode name,
-  Map<Unicode, Source<Model>> sources,
-  Map<Unicode, Module<Model>> submodules) {}
+record Module<Model>(Path path, String name, Map<String, Source<Model>> sources,
+  Map<String, Module<Model>> submodules) {}

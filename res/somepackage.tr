@@ -1,1 +1,20 @@
-this is a package
+entrypoint {
+  const a = 5;
+  var b: i32;
+
+  for (var i = 0; i < a; i += 1) {
+    b += a;
+  }
+
+  b *= doubleIt(a);
+
+  const c = b - squareIt(a);
+}
+
+function doubleIt(x: i32): i32 {
+  return x * 2;
+}
+
+function squareIt(x: i32): f32 {
+  return x ^ 2;
+}

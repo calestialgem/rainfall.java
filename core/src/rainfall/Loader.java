@@ -9,7 +9,7 @@ import java.util.Optional;
 
 final class Loader {
   static Workspace<Linear> load(Path loaded) {
-    var packages = new HashMap<Unicode, Package<Linear>>();
+    var packages = new HashMap<String, Package<Linear>>();
 
     for (var entry : loaded.toFile().listFiles()) {
       if (entry.isFile()) {
@@ -32,11 +32,11 @@ final class Loader {
   }
 
   private static Optional<Module<Linear>> loadModule(Path loaded) {
-    var name = Unicode.from(loaded.getFileName().toString());
+    var name = loaded.getFileName().toString();
     checkName(name);
 
-    var sources    = new HashMap<Unicode, Source<Linear>>();
-    var submodules = new HashMap<Unicode, Module<Linear>>();
+    var sources    = new HashMap<String, Source<Linear>>();
+    var submodules = new HashMap<String, Module<Linear>>();
 
     for (var entry : loaded.toFile().listFiles()) {
       if (entry.isFile()) {
@@ -64,20 +64,21 @@ final class Loader {
   private static Optional<Source<Linear>> loadSource(Path loaded) {
     var fileName = loaded.getFileName().toString();
     if (!fileName.endsWith(".tr")) { return Optional.empty(); }
-    var name = Unicode.from(fileName.substring(0, fileName.length() - 3));
+    var name = fileName.substring(0, fileName.length() - 3);
     checkName(name);
     return Optional.of(new Source<>(loaded, name, new Loader(loaded).load()));
   }
 
-  private static void checkName(Unicode name) {
-    if (name.codepoint(name.length() - 1) == '_') {
-      var initialPortion = name.sub(0, name.length() - 2);
+  private static void checkName(String name) {
+    if (name.charAt(name.length() - 1) == '_') {
+      var initialPortion = name.substring(0, name.length() - 1);
       if (!Lexeme.KEYWORDS.containsKey(initialPortion))
         throw new RuntimeException();
     } else {
-      for (var codepoint : name.codepoints())
-        if ((codepoint < 'a' || codepoint > 'z')
-          && (codepoint < '0' || codepoint > '9')) throw new RuntimeException();
+      for (var i = 0; i < name.length();
+        i++) if ((name.charAt(i) < 'a' || name.charAt(i) > 'z')
+          && (name.charAt(i) < '0' || name.charAt(i) > '9'))
+          throw new RuntimeException();
     }
   }
 
@@ -87,8 +88,8 @@ final class Loader {
 
   private Linear load() {
     try {
-      return new Linear(Unicode.from(
-        Files.readString(loaded).replaceAll(System.lineSeparator(), "\n")));
+      return new Linear(
+        Files.readString(loaded).replaceAll(System.lineSeparator(), "\n"));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

@@ -1,3 +1,5 @@
 package rainfall;
 
-record Linear(Unicode contents) {}
+record Linear(String contents) {
+  @Override public String toString() { return contents; }
+}
