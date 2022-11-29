@@ -32,19 +32,19 @@ record Lexeme(Type type, Portion portion) {
     PRIVATE, PROTECTED, PUBLIC, IMPORT,
 
     // Definitions
-    CONST, VAR, FUNC, PROC, ENTRYPOINT, IDENTIFIER,
+    CONST, VAR, FUNC, PROC, ENTRYPOINT, FREE,
 
     // Types
     INTERFACE, STRUCT, CLASS, ENUM, UNION, VARIANT,
 
     // Control Flow
     IF, ELSE, FOR, WHILE, DO, SWITCH, CASE, DEFAULT, FALLTHROUGH, BREAK,
-    CONTINUE, RETURN, FREE,
+    CONTINUE, RETURN,
 
     // Qualifiers
     MUTABLE, SHARED, VOLATILE, ALIGNAS, THREADLOCAL,
 
-    UNKNOWN;
+    IDENTIFIER, UNKNOWN;
   }
 
   static final Map<Unicode, Lexeme.Type> MARKS =
@@ -81,7 +81,7 @@ record Lexeme(Type type, Portion portion) {
       Map.entry(Unicode.from("$"), Lexeme.Type.DOLLAR),
       Map.entry(Unicode.from("~"), Lexeme.Type.TILDE),
       Map.entry(Unicode.from("."), Lexeme.Type.DOT),
-      Map.entry(Unicode.from("="), Lexeme.Type.DOLLAR),
+      Map.entry(Unicode.from("="), Lexeme.Type.EQUALS),
       Map.entry(Unicode.from(","), Lexeme.Type.COMMA),
       Map.entry(Unicode.from(":"), Lexeme.Type.COLON),
       Map.entry(Unicode.from(";"), Lexeme.Type.SEMICOLON),
@@ -97,6 +97,7 @@ record Lexeme(Type type, Portion portion) {
       Map.entry(Unicode.from("func"), Lexeme.Type.FUNC),
       Map.entry(Unicode.from("proc"), Lexeme.Type.PROC),
       Map.entry(Unicode.from("entrypoint"), Lexeme.Type.ENTRYPOINT),
+      Map.entry(Unicode.from("free"), Lexeme.Type.FREE),
       Map.entry(Unicode.from("interface"), Lexeme.Type.INTERFACE),
       Map.entry(Unicode.from("struct"), Lexeme.Type.STRUCT),
       Map.entry(Unicode.from("class"), Lexeme.Type.CLASS),
@@ -115,7 +116,6 @@ record Lexeme(Type type, Portion portion) {
       Map.entry(Unicode.from("break"), Lexeme.Type.BREAK),
       Map.entry(Unicode.from("continue"), Lexeme.Type.CONTINUE),
       Map.entry(Unicode.from("return"), Lexeme.Type.RETURN),
-      Map.entry(Unicode.from("free"), Lexeme.Type.FREE),
       Map.entry(Unicode.from("mutable"), Lexeme.Type.MUTABLE),
       Map.entry(Unicode.from("shared"), Lexeme.Type.SHARED),
       Map.entry(Unicode.from("volatile"), Lexeme.Type.VOLATILE),
