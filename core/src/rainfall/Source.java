@@ -1,5 +1,3 @@
 package rainfall;
 
-import java.nio.file.Path;
-
-record Source(Path path, String contents) {}
+record Source(UTF8 path, UTF8 contents) {}

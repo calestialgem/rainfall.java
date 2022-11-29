@@ -21,13 +21,16 @@ record Lexeme(Type type, Portion portion) {
     DOLLAR, TILDE, DOT,
 
     // Markers
-    EQUALS, COMMA, COLON, SEMICOLON, HASH, EOF,
+    EQUALS, COMMA, COLON, SEMICOLON, AT,
+
+    // Literals
+    CHARACTER, STRING, RAW_STRING, DECIMAL,
 
     // Visibility
     PRIVATE, PROTECTED, PUBLIC, IMPORT,
 
     // Definitions
-    CONST, VAR, FUNC, PROC, ENTRY_POINT,
+    CONST, VAR, FUNC, PROC, ENTRYPOINT, IDENTIFIER,
 
     // Types
     INTERFACE, STRUCT, CLASS, ENUM, UNION, VARIANT,
@@ -39,10 +42,6 @@ record Lexeme(Type type, Portion portion) {
     // Qualifiers
     MUTABLE, SHARED, VOLATILE, ALIGNAS, THREADLOCAL,
 
-    // Attributes
-    DEPRECATED, DISCARDABLE, MAYBE_UNUSED, NORETURN,
-
-    // Other
-    IDENTIFIER, DECIMAL_LITERAL;
+    UNKNOWN;
   }
 }
