@@ -1,7 +1,7 @@
 package rainfall;
 
-record Location(UTF8 source, int index, int line, int column) {
-  static Location at(UTF8 source, int index) {
+record Location(Unicode source, int index, int line, int column) {
+  static Location at(Unicode source, int index) {
     int line   = 1;
     int column = 1;
     for (int i = 0; i < index; i++) {

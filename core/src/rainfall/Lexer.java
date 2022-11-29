@@ -7,7 +7,7 @@ import java.util.List;
 
 final class Lexer {
   static Workspace<Lexical> lex(Workspace<Linear> lexed) {
-    var packages = new HashMap<UTF8, Package<Lexical>>();
+    var packages = new HashMap<Unicode, Package<Lexical>>();
     for (var package_ : lexed.packages().entrySet()) {
       packages.put(package_.getKey(), lex(package_.getValue()));
     }
@@ -31,12 +31,12 @@ final class Lexer {
   }
 
   private static Module<Lexical> lex(Module<Linear> lexed) {
-    var sources = new HashMap<UTF8, Source<Lexical>>();
+    var sources = new HashMap<Unicode, Source<Lexical>>();
     for (var source : lexed.sources().entrySet()) {
       sources.put(source.getKey(), lex(source.getValue()));
     }
 
-    var submodules = new HashMap<UTF8, Module<Lexical>>();
+    var submodules = new HashMap<Unicode, Module<Lexical>>();
     for (var submodule : lexed.submodules().entrySet()) {
       submodules.put(submodule.getKey(), lex(submodule.getValue()));
     }
@@ -80,7 +80,7 @@ final class Lexer {
   private boolean skipComments() {
     if (!takeCharacter('#')) return false;
     if (!takeCharacter('{')) while (!takeCharacter('\n')) nextCharacter++;
-    else while (!takeString(UTF8.from("}#"))) nextCharacter++;
+    else while (!takeString(Unicode.from("}#"))) nextCharacter++;
     return true;
   }
 
@@ -135,7 +135,7 @@ final class Lexer {
       }
     }
 
-    if (takeAny(UTF8.from("eE"))) {
+    if (takeAny(Unicode.from("eE"))) {
       if (!takeDecimalDigit()) throw new RuntimeException();
       while (takeDecimalDigit() || takeCharacter('_')) {}
     }
@@ -176,13 +176,13 @@ final class Lexer {
       nextCharacter++;
       return;
     }
-    if (takeAny(UTF8.from("\\'\"`"))) return;
+    if (takeAny(Unicode.from("\\'\"`"))) return;
     int digitCount = 0;
     while (takeHexadecimalDigit()) { digitCount++; }
     if (digitCount == 0 || digitCount > 8) throw new RuntimeException();
   }
 
-  private boolean takeAny(UTF8 alternatives) {
+  private boolean takeAny(Unicode alternatives) {
     if (!alternatives.contains(getNext())) return false;
     nextCharacter++;
     return true;
@@ -208,7 +208,7 @@ final class Lexer {
     return true;
   }
 
-  private boolean takeString(UTF8 taken) {
+  private boolean takeString(Unicode taken) {
     if (!lexed.contents().startsWith(taken, nextCharacter)) { return false; }
     nextCharacter += taken.length();
     return true;
@@ -225,7 +225,7 @@ final class Lexer {
   }
 
   private Portion getPortion(int startCharacter) {
-    return Portion.at(lexed.contents(), startCharacter, nextCharacter);
+    return Portion.at(lexed.contents(), startCharacter, nextCharacter - 1);
   }
 
   private int getNext() { return lexed.contents().codepoint(nextCharacter); }

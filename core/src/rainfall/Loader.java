@@ -9,7 +9,7 @@ import java.util.Optional;
 
 final class Loader {
   static Workspace<Linear> load(Path loaded) {
-    var packages = new HashMap<UTF8, Package<Linear>>();
+    var packages = new HashMap<Unicode, Package<Linear>>();
 
     for (var entry : loaded.toFile().listFiles()) {
       if (entry.isFile()) {
@@ -32,11 +32,11 @@ final class Loader {
   }
 
   private static Optional<Module<Linear>> loadModule(Path loaded) {
-    var name = UTF8.from(loaded.getFileName().toString());
+    var name = Unicode.from(loaded.getFileName().toString());
     checkName(name);
 
-    var sources    = new HashMap<UTF8, Source<Linear>>();
-    var submodules = new HashMap<UTF8, Module<Linear>>();
+    var sources    = new HashMap<Unicode, Source<Linear>>();
+    var submodules = new HashMap<Unicode, Module<Linear>>();
 
     for (var entry : loaded.toFile().listFiles()) {
       if (entry.isFile()) {
@@ -64,12 +64,12 @@ final class Loader {
   private static Optional<Source<Linear>> loadSource(Path loaded) {
     var fileName = loaded.getFileName().toString();
     if (!fileName.endsWith(".tr")) { return Optional.empty(); }
-    var name = UTF8.from(fileName.substring(0, fileName.length() - 3));
+    var name = Unicode.from(fileName.substring(0, fileName.length() - 3));
     checkName(name);
     return Optional.of(new Source<>(loaded, name, new Loader(loaded).load()));
   }
 
-  private static void checkName(UTF8 name) {
+  private static void checkName(Unicode name) {
     if (name.codepoint(name.length() - 1) == '_') {
       var initialPortion = name.sub(0, name.length() - 2);
       if (!Lexeme.KEYWORDS.containsKey(initialPortion))
@@ -87,7 +87,8 @@ final class Loader {
 
   private Linear load() {
     try {
-      return new Linear(UTF8.from(Files.readString(loaded)));
+      return new Linear(Unicode.from(
+        Files.readString(loaded).replaceAll(System.lineSeparator(), "\n")));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

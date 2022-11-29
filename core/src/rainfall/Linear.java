@@ -1,3 +1,3 @@
 package rainfall;
 
-record Linear(UTF8 contents) {}
+record Linear(Unicode contents) {}
