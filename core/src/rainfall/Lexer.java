@@ -148,13 +148,13 @@ final class Lexer {
     var startCharacter = nextCharacter;
 
     if (takeUppercaseLetter()) {
-      while (takeAlphabetic()) {}
+      while (takeAlphabetic() || takeDecimalDigit()) {}
       addLexeme(Lexeme.Type.IDENTIFIER, startCharacter);
       return true;
     }
 
     if (!takeLowercaseLetter()) return false;
-    while (takeAlphabetic()) {}
+    while (takeAlphabetic() || takeDecimalDigit()) {}
 
     var initialPortion = getPortion(startCharacter).toString();
     if (!Lexeme.KEYWORDS.containsKey(initialPortion)) {
