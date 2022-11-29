@@ -70,12 +70,15 @@ final class Loader {
   }
 
   private static void checkName(String name) {
+    if (name.isEmpty()) throw new RuntimeException();
     if (name.charAt(name.length() - 1) == '_') {
       var initialPortion = name.substring(0, name.length() - 1);
       if (!Lexeme.KEYWORDS.containsKey(initialPortion))
         throw new RuntimeException();
     } else {
-      for (var i = 0; i < name.length();
+      if ((name.charAt(0) < 'a' || name.charAt(0) > 'z'))
+        throw new RuntimeException();
+      for (var i = 1; i < name.length();
         i++) if ((name.charAt(i) < 'a' || name.charAt(i) > 'z')
           && (name.charAt(i) < '0' || name.charAt(i) > '9'))
           throw new RuntimeException();
